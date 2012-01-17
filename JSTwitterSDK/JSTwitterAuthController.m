@@ -6,10 +6,10 @@
 //  Copyright 2010 JernejStrasner.com. All rights reserved.
 //
 
-#import "JSTwitterAuthDialog.h"
+#import "JSTwitterAuthController.h"
 
 
-@implementation JSTwitterAuthDialog
+@implementation JSTwitterAuthController
 
 @synthesize delegate;
 @synthesize navigationBar, webView;

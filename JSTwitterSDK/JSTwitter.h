@@ -11,7 +11,7 @@
 #import "OAuthConsumer.h"
 
 #import "JSTwitterRequest.h"
-#import "JSTwitterAuthDialog.h"
+#import "JSTwitterAuthController.h"
 
 
 extern NSString * const kJSTwitterRestServerURL;

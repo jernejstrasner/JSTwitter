@@ -14,7 +14,7 @@
 
 @protocol JSTwitterAuthDialogDelegate;
 
-@interface JSTwitterAuthDialog : UIViewController <UIWebViewDelegate> {
+@interface JSTwitterAuthController : UIViewController <UIWebViewDelegate> {
 	id <JSTwitterAuthDialogDelegate> delegate;
 	
 	UINavigationBar *navigationBar;
@@ -48,11 +48,11 @@
 /**
  This is called when the user presses the cancel button
  */
-- (void)twitterAuthDialogDidCancel:(JSTwitterAuthDialog *)authDialog;
+- (void)twitterAuthDialogDidCancel:(JSTwitterAuthController *)authDialog;
 
 /**
  Called when the permissions to the user are successfully granted
  */
-- (void)twitterAuthDialog:(JSTwitterAuthDialog *)authDialog authorizedRequestToken:(NSString *)requestToken requestTokenSecret:(NSString *)requestTokenSecret;
+- (void)twitterAuthDialog:(JSTwitterAuthController *)authDialog authorizedRequestToken:(NSString *)requestToken requestTokenSecret:(NSString *)requestTokenSecret;
 
 @end
