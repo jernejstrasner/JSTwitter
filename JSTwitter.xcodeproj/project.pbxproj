@@ -250,6 +250,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = JernejStrasner.com;
 			};
 			buildConfigurationList = B8C2400B14C5AA79002AD18F /* Build configuration list for PBXProject "JSTwitter" */;
 			compatibilityVersion = "Xcode 3.2";
