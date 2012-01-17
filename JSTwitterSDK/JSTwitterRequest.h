@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+// Request types
+typedef enum {
+	TwitterHTTPRequestTypePOST,
+	TwitterHTTPRequestTypeGET
+} TwitterHTTPRequestType;
+
 @interface JSTwitterRequest : NSObject
+
+
 
 @end

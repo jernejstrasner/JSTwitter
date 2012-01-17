@@ -8,23 +8,34 @@
 
 #import "JSTwitter.h"
 
-#import "NSString+Helpers.h"
-#import "JSON.h"
+#import "JSONKit.h"
+
+// Constants
+NSString * const kJSTwitterRestServerURL    = @"http://api.twitter.com/1/";
+NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
+
 
 @interface JSTwitter () {
-	// OAuth data
-	OAToken *theToken;
-	OAConsumer *theConsumer;
-    
 	// Dispatch
 	dispatch_queue_t twitterQueue;
 }
+
+@property (nonatomic, retain) OAToken *oauthToken;
+@property (nonatomic, retain) OAConsumer *oauthConsumer;
 
 @end
 
 @implementation JSTwitter
 
-- (id)init {
+#pragma mark - Properties
+
+@synthesize oauthToken = _oauthToken;
+@synthesize oauthConsumer = _oauthConsumer;
+
+#pragma mark - Object lifecycle
+
+- (id)init
+{
 	if (self = [super init]) {
 		// Set up the dispatch queue
 		twitterQueue = dispatch_queue_create("com.jernejstrasner.jstwitter", NULL);
@@ -32,35 +43,41 @@
 	return self;
 }
 
-- (BOOL)resumeSessionForUser:(NSString *)user {
-	[theToken release];
-	theToken = [[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:@"jernejstrasner.com" prefix:user];
-	
-	if (!theToken) {
+- (BOOL)resumeSessionForUser:(NSString *)user
+{
+	self.oauthToken = [[[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:@"jernejstrasner.com" prefix:user] autorelease];
+	if (!self.oauthToken) {
 		return NO;
 	}
-	
 	return YES;
 }
 
-- (BOOL)saveSessionForUser:(NSString *)user {
-	if (!theToken) {
+- (BOOL)saveSessionForUser:(NSString *)user
+{
+	if (!self.oauthToken) {
 		return NO;
 	}
-	
-	[theToken storeInUserDefaultsWithServiceProviderName:@"jernejstrasner.com" prefix:user];
+	[self.oauthToken storeInUserDefaultsWithServiceProviderName:@"jernejstrasner.com" prefix:user];
 	return YES;
 }
 
-#pragma mark -
-#pragma mark OAuth methods
-
-- (OAConsumer *)getOAuthConsumer {
-	if (!theConsumer) {
-		theConsumer = [[OAConsumer alloc] initWithKey:OAUTH_CONSUMER_KEY secret:OAUTH_CONSUMER_SECRET];
-	}
+- (void)dealloc
+{
+	dispatch_release(twitterQueue);
 	
-	return theConsumer;
+	[_oauthToken release];
+	[_oauthConsumer release];
+	
+	[super dealloc];
+}
+
+#pragma mark - OAuth methods
+
+- (OAConsumer *)oauthConsumer {
+	if (!_oauthConsumer) {
+		_oauthConsumer = [[OAConsumer alloc] initWithKey:OAUTH_CONSUMER_KEY secret:OAUTH_CONSUMER_SECRET];
+	}
+	return _oauthConsumer;
 }
 
 - (void)getRequestToken {
@@ -72,7 +89,7 @@
 		NSURL *url = [NSURL URLWithString:theURLString];
 		
 		// The consumer object
-		OAConsumer *consumer = [self getOAuthConsumer];
+		OAConsumer *consumer = [self oauthConsumer];
 		// Initialize the request
 		OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:url consumer:consumer token:nil realm:nil signatureProvider:nil] autorelease];
 		// Set the HTTP method
@@ -89,9 +106,8 @@
 		NSString *jsonData = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
 
 		// Check the response
-		DLog(@"Response code: %d", [response statusCode]);
 		NSInteger requestStatusCode = [response statusCode];
-
+        
 		if (error == nil) {
 			// If request was successful check the HTTP response codes
 			// Log errors to the console
@@ -122,9 +138,9 @@
 			if (requestStatusCode != 200) {
 				// Call the error function
 				dispatch_async(dispatch_get_main_queue(), ^{
-					if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-						[delegate twitterAuthFailed:self];
-					}
+//					if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
+//						[delegate twitterAuthFailed:self];
+//					}
 				});
 			} else {
 				// Get the request token data
@@ -136,11 +152,10 @@
 					temp = [parameter componentsSeparatedByString:@"="];
 					[requestTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
 				}
-				DLog(@"%@", requestTokenData);
 				
 				dispatch_async(dispatch_get_main_queue(), ^{
 					// Request the display of a dialog
-					[delegate twitter:self authGotRequestToken:[requestTokenData valueForKey:@"oauth_token"] secret:[requestTokenData valueForKey:@"oauth_token_secret"]];
+//					[delegate twitter:self authGotRequestToken:[requestTokenData valueForKey:@"oauth_token"] secret:[requestTokenData valueForKey:@"oauth_token_secret"]];
 				});
 				
 				[requestTokenData release];
@@ -151,9 +166,9 @@
 			NSLog(@"%@: NSURLConnection error: %@", [self class], [error localizedDescription]);
 			// Call the error function
 			dispatch_async(dispatch_get_main_queue(), ^{
-				if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-					[delegate twitterAuthFailed:self];
-				}
+//				if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
+//					[delegate twitterAuthFailed:self];
+//				}
 			});
 		}
 	});
@@ -168,7 +183,7 @@
 		NSURL *url = [NSURL URLWithString:theURLString];
 		
 		// The consumer object
-		OAConsumer *consumer = [self getOAuthConsumer];
+		OAConsumer *consumer = [self oauthConsumer];
 		// The request token to exchange
 		OAToken *token = [[[OAToken alloc] initWithKey:requestToken secret:requestTokenSecret] autorelease];
 		// Initialize the request
@@ -187,7 +202,6 @@
 		NSString *jsonData = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
 		
 		// Check the response
-		DLog(@"Response code: %d", [response statusCode]);
 		NSInteger requestStatusCode = [response statusCode];
 		
 		if (error == nil) {
@@ -220,9 +234,9 @@
 			if (requestStatusCode != 200) {
 				// Call the error function
 				dispatch_async(dispatch_get_main_queue(), ^{
-					if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-						[delegate twitterAuthFailed:self];
-					}
+//					if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
+//						[delegate twitterAuthFailed:self];
+//					}
 				});
 			} else {
 				// Get the request token data
@@ -235,13 +249,12 @@
 					temp = [parameter componentsSeparatedByString:@"="];
 					[accessTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
 				}
-				DLog(@"%@", accessTokenData);
 				
 				dispatch_async(dispatch_get_main_queue(), ^{
 					// Build the acess token
-					theToken = [[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]];
+					self.oauthToken = [[[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
 					// Request the display of a dialog
-					[delegate twitter:self authGotAcessToken:theToken forUser:[accessTokenData valueForKey:@"screen_name"]];
+//					[delegate twitter:self authGotAcessToken:theToken forUser:[accessTokenData valueForKey:@"screen_name"]];
 				});
 				
 				[accessTokenData release];
@@ -252,21 +265,20 @@
 			NSLog(@"%@: NSURLConnection error: %@", [self class], [error localizedDescription]);
 			// Call the error function
 			dispatch_async(dispatch_get_main_queue(), ^{
-				if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-					[delegate twitterAuthFailed:self];
-				}
+//				if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
+//					[delegate twitterAuthFailed:self];
+//				}
 			});
 		}
 	});
 }
 
-#pragma mark -
-#pragma mark Request fetching
+#pragma mark - Request fetching
 
 - (void)fetchJSONValueForRequest:(NSString *)requestString withArguments:(NSArray *)requestArguments requestType:(TwitterHTTPRequestType)requestType requestServer:(NSString *)requestServer completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock {
 	
-	if (!theToken) {
-		DLog(@"Not authorized!");
+	if (!self.oauthToken) {
+		NSLog(@"Not authorized!");
 	} else {
 		dispatch_async(twitterQueue, ^{
 			
@@ -284,19 +296,17 @@
 			NSString *theURLString = [NSString stringWithFormat:@"%@://%@%@%@", connectionType, requestServer, requestString, responseFormat];	
 			
 			// Log the URL to the console
-			DLog(@"%@", theURLString);
+			NSLog(@"%@", theURLString);
 			
 			// Cast the url in the NSURL object
 			NSURL *url = [NSURL URLWithString:theURLString];
 			
 			// Initialize the request
-			OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:url consumer:[self getOAuthConsumer] token:theToken realm:nil signatureProvider:[[OAHMAC_SHA1SignatureProvider alloc] init]] autorelease];
+			OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:url consumer:[self oauthConsumer] token:[self oauthToken] realm:nil signatureProvider:[[OAHMAC_SHA1SignatureProvider alloc] init]] autorelease];
 			
 			// Set the HTTP method
 			if (requestType == TwitterHTTPRequestTypePOST) {
 				[request setHTTPMethod:@"POST"];
-			} else if (requestType == TwitterHTTPRequestTypeDELETE) {
-				[request setHTTPMethod:@"DELETE"];
 			}
 			
 			// Add the parameters
@@ -313,8 +323,6 @@
 			// We should probably be parsing the data returned by this call, for now just check the error.
 			NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
 			NSString *jsonData = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
-			
-			DLog(@"%@: Response code: %d", [self class], [response statusCode]);
 			
 			NSInteger requestStatusCode = [response statusCode];
 			// The response object
@@ -348,9 +356,9 @@
 				// Call the sucess/error function on the main thread
 				if (requestStatusCode != 200) {
 					// Decode the JSON response
-					resolvedResponse = [jsonData JSONValue];
+					resolvedResponse = [jsonData objectFromJSONString];
 					// Debug
-					DLog(@"%@: Error:\nRequest: %@\nError description: %@", [self class], [resolvedResponse objectForKey:@"request"], [resolvedResponse objectForKey:@"error"]);
+					NSLog(@"%@: Error:\nRequest: %@\nError description: %@", [self class], [resolvedResponse objectForKey:@"request"], [resolvedResponse objectForKey:@"error"]);
 					// Prepare the error
 					NSError *theError = [NSError errorWithDomain:@"com.jernejstrasner.twitter" code:100 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[resolvedResponse objectForKey:@"error"], NSLocalizedDescriptionKey, nil]];
 					// Execute the error block
@@ -360,7 +368,7 @@
 				} else {
 					// Resolve the response to an object
 					// If there is an error on the server side it will get resolved to an NSMutableDictionary with "error" and "request" keys
-					resolvedResponse = [jsonData JSONValue];
+					resolvedResponse = [jsonData objectFromJSONString];
 					// Execute the completion block
 					dispatch_async(dispatch_get_main_queue(), ^{
 						completionBlock(resolvedResponse);
@@ -380,8 +388,7 @@
 	}
 }
 
-#pragma mark -
-#pragma mark Status methods
+#pragma mark - Status methods
 
 - (void)statusesUpdate:(NSString *)status completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock {
     NSString *urlString = @"/statuses/update";
@@ -390,19 +397,7 @@
 						  [OARequestParameter requestParameterWithName:@"status" value:status],
 						  nil];
 	
-	[self fetchJSONValueForRequest:urlString withArguments:arguments requestType:TwitterHTTPRequestTypePOST requestServer:TWITTER_SERVER completion:completionBlock error:errorBlock];
-}
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)dealloc {
-	dispatch_release(twitterQueue);
-	
-	[theToken release];
-	[theConsumer release];
-	
-	[super dealloc];
+	[self fetchJSONValueForRequest:urlString withArguments:arguments requestType:TwitterHTTPRequestTypePOST requestServer:kJSTwitterRestServerURL completion:completionBlock error:errorBlock];
 }
 
 @end

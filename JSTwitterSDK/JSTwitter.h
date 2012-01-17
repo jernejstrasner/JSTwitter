@@ -8,27 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import <dispatch/dispatch.h>
-
-#import "JSTwitterAuthDialog.h"
 #import "OAuthConsumer.h"
 
+#import "JSTwitterRequest.h"
+#import "JSTwitterAuthDialog.h"
 
-#define TWITTER_SERVER @"twitter.com"
-#define TWITTER_API_SERVER @"api.twitter.com"
-#define TWITTER_API_VERSION 1
-#define TWITTER_SEARCH_SERVER @"search.twitter.com"
+
+extern NSString * const kJSTwitterRestServerURL;
+extern NSString * const kJSTwitterSearchServerURL;
 
 
 // KinoSporedi
 #define OAUTH_CONSUMER_KEY @"kj3n9A8oOX6wj0o3KeLyWw"
 #define OAUTH_CONSUMER_SECRET @"HB4cF7Vv4j5O2FU2CMlxkN9rsW4TXtTm7m9UPEjxjAM"
-
-// Request types
-typedef enum {
-	TwitterHTTPRequestTypePOST,
-	TwitterHTTPRequestTypeGET,
-	TwitterHTTPRequestTypeDELETE
-} TwitterHTTPRequestType;
 
 // Block types
 typedef void(^jstwitter_success_block_t)(void);
