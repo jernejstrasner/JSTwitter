@@ -12,6 +12,7 @@
 
 // Constants
 NSString * const kJSTwitterRestServerURL    = @"http://api.twitter.com/1/";
+NSString * const kJSTwitterOauthServerURL   = @"https://api.twitter.com/oauth/";
 NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 
 
@@ -29,23 +30,47 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 
 #pragma mark - Properties
 
+@synthesize oauthConsumerKey = _oauthConsumerKey;
+@synthesize oauthConsumerSecret = _oauthConsumerSecret;
+
 @synthesize oauthToken = _oauthToken;
 @synthesize oauthConsumer = _oauthConsumer;
+
+- (OAConsumer *)oauthConsumer
+{
+	if (!_oauthConsumer) {
+		_oauthConsumer = [[OAConsumer alloc] initWithKey:self.oauthConsumerKey secret:self.oauthConsumerSecret];
+	}
+	return _oauthConsumer;
+}
+
+#pragma mark - Singleton
+
++ (JSTwitter *)sharedInstance
+{
+    static JSTwitter *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[JSTwitter alloc] init];
+    });
+	return sharedInstance;
+}
 
 #pragma mark - Object lifecycle
 
 - (id)init
 {
-	if (self = [super init]) {
+    self = [super init];
+	if (self) {
 		// Set up the dispatch queue
-		twitterQueue = dispatch_queue_create("com.jernejstrasner.jstwitter", NULL);
+		twitterQueue = dispatch_queue_create("com.jstwitter.network", NULL);
 	}
 	return self;
 }
 
 - (BOOL)resumeSessionForUser:(NSString *)user
 {
-	self.oauthToken = [[[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:@"jernejstrasner.com" prefix:user] autorelease];
+	self.oauthToken = [[[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:@"com.jstwitter.token" prefix:user] autorelease];
 	if (!self.oauthToken) {
 		return NO;
 	}
@@ -57,7 +82,7 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 	if (!self.oauthToken) {
 		return NO;
 	}
-	[self.oauthToken storeInUserDefaultsWithServiceProviderName:@"jernejstrasner.com" prefix:user];
+	[self.oauthToken storeInUserDefaultsWithServiceProviderName:@"com.jstwitter.token" prefix:user];
 	return YES;
 }
 
@@ -65,6 +90,8 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 {
 	dispatch_release(twitterQueue);
 	
+    [_oauthConsumerKey release];
+    [_oauthConsumerSecret release];
 	[_oauthToken release];
 	[_oauthConsumer release];
 	
@@ -73,18 +100,12 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 
 #pragma mark - OAuth methods
 
-- (OAConsumer *)oauthConsumer {
-	if (!_oauthConsumer) {
-		_oauthConsumer = [[OAConsumer alloc] initWithKey:OAUTH_CONSUMER_KEY secret:OAUTH_CONSUMER_SECRET];
-	}
-	return _oauthConsumer;
-}
-
-- (void)getRequestToken {
-	
+- (void)getRequestTokenWithCompletionHandler:(jstwitter_request_token_success_block_t)completionHandler
+                                errorHandler:(jstwitter_error_block_t)errorHandler
+{	
 	dispatch_async(twitterQueue, ^{
 		// Make the URL
-		NSString *theURLString = @"https://api.twitter.com/oauth/request_token";	
+		NSString *theURLString = [kJSTwitterOauthServerURL stringByAppendingString:@"request_token"];	
 		// Cast the url in the NSURL object
 		NSURL *url = [NSURL URLWithString:theURLString];
 		
@@ -138,9 +159,7 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 			if (requestStatusCode != 200) {
 				// Call the error function
 				dispatch_async(dispatch_get_main_queue(), ^{
-//					if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-//						[delegate twitterAuthFailed:self];
-//					}
+                    errorHandler(nil);
 				});
 			} else {
 				// Get the request token data
@@ -155,7 +174,7 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 				
 				dispatch_async(dispatch_get_main_queue(), ^{
 					// Request the display of a dialog
-//					[delegate twitter:self authGotRequestToken:[requestTokenData valueForKey:@"oauth_token"] secret:[requestTokenData valueForKey:@"oauth_token_secret"]];
+                    completionHandler([requestTokenData valueForKey:@"oauth_token"], [requestTokenData valueForKey:@"oauth_token_secret"]);
 				});
 				
 				[requestTokenData release];
@@ -166,19 +185,20 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 			NSLog(@"%@: NSURLConnection error: %@", [self class], [error localizedDescription]);
 			// Call the error function
 			dispatch_async(dispatch_get_main_queue(), ^{
-//				if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-//					[delegate twitterAuthFailed:self];
-//				}
+                errorHandler(nil);
 			});
 		}
 	});
 }
 
-- (void)getAcessTokenForRequestToken:(NSString *)requestToken andRequestTokenSecret:(NSString *)requestTokenSecret {
-	
+- (void)getAcessTokenForRequestToken:(NSString *)requestToken
+                  requestTokenSecret:(NSString *)requestTokenSecret
+                   completionHandler:(jstwitter_access_token_success_block_t)completionHandler
+                        errorHandler:(jstwitter_error_block_t)errorHandler
+{
 	dispatch_async(twitterQueue, ^{
 		// Make the URL
-		NSString *theURLString = @"https://api.twitter.com/oauth/access_token";	
+		NSString *theURLString = [kJSTwitterOauthServerURL stringByAppendingString:@"access_token"];	
 		// Cast the url in the NSURL object
 		NSURL *url = [NSURL URLWithString:theURLString];
 		
@@ -234,14 +254,11 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 			if (requestStatusCode != 200) {
 				// Call the error function
 				dispatch_async(dispatch_get_main_queue(), ^{
-//					if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-//						[delegate twitterAuthFailed:self];
-//					}
+                    errorHandler(nil);
 				});
 			} else {
 				// Get the request token data
 				// Parse the returned data
-				
 				NSArray *parameters = [jsonData componentsSeparatedByString:@"&"];
 				NSMutableDictionary *accessTokenData = [NSMutableDictionary new];
 				NSArray *temp;
@@ -254,7 +271,7 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 					// Build the acess token
 					self.oauthToken = [[[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
 					// Request the display of a dialog
-//					[delegate twitter:self authGotAcessToken:theToken forUser:[accessTokenData valueForKey:@"screen_name"]];
+                    completionHandler(self.oauthToken, [accessTokenData valueForKey:@"screen_name"]);
 				});
 				
 				[accessTokenData release];
@@ -265,16 +282,14 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 			NSLog(@"%@: NSURLConnection error: %@", [self class], [error localizedDescription]);
 			// Call the error function
 			dispatch_async(dispatch_get_main_queue(), ^{
-//				if ([delegate respondsToSelector:@selector(twitterAuthFailed:)]) {
-//					[delegate twitterAuthFailed:self];
-//				}
+                errorHandler(nil);
 			});
 		}
 	});
 }
 
 #pragma mark - Request fetching
-
+/*
 - (void)fetchJSONValueForRequest:(NSString *)requestString withArguments:(NSArray *)requestArguments requestType:(TwitterHTTPRequestType)requestType requestServer:(NSString *)requestServer completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock {
 	
 	if (!self.oauthToken) {
@@ -387,9 +402,9 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 		});
 	}
 }
-
+*/
 #pragma mark - Status methods
-
+/*
 - (void)statusesUpdate:(NSString *)status completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock {
     NSString *urlString = @"/statuses/update";
 	
@@ -399,5 +414,5 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 	
 	[self fetchJSONValueForRequest:urlString withArguments:arguments requestType:TwitterHTTPRequestTypePOST requestServer:kJSTwitterRestServerURL completion:completionBlock error:errorBlock];
 }
-
+*/
 @end

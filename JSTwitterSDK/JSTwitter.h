@@ -15,40 +15,52 @@
 
 
 extern NSString * const kJSTwitterRestServerURL;
+extern NSString * const kJSTwitterOauthServerURL;
 extern NSString * const kJSTwitterSearchServerURL;
 
-
-// KinoSporedi
-#define OAUTH_CONSUMER_KEY @"kj3n9A8oOX6wj0o3KeLyWw"
-#define OAUTH_CONSUMER_SECRET @"HB4cF7Vv4j5O2FU2CMlxkN9rsW4TXtTm7m9UPEjxjAM"
 
 // Block types
 typedef void(^jstwitter_success_block_t)(void);
 typedef void(^jstwitter_error_block_t)(NSError *error);
+typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString *tokenSecret);
+typedef void(^jstwitter_access_token_success_block_t)(OAToken *token, NSString *user);
 
 
 @interface JSTwitter : NSObject
 
+// Properties
+@property (nonatomic, retain) NSString *oauthConsumerKey;
+@property (nonatomic, retain) NSString *oauthConsumerSecret;
+
+// Singleton
++ (JSTwitter *)sharedInstance;
+
 // OAuth
-- (void)getRequestToken;
-- (void)getAcessTokenForRequestToken:(NSString *)requestToken andRequestTokenSecret:(NSString *)requestTokenSecret;
+- (void)getRequestTokenWithCompletionHandler:(jstwitter_request_token_success_block_t)completionHandler
+                                errorHandler:(jstwitter_error_block_t)errorHandler;
+
+- (void)getAcessTokenForRequestToken:(NSString *)requestToken
+                  requestTokenSecret:(NSString *)requestTokenSecret
+                   completionHandler:(jstwitter_access_token_success_block_t)completionHandler
+                        errorHandler:(jstwitter_error_block_t)errorHandler;
+
 - (BOOL)resumeSessionForUser:(NSString *)user;
 - (BOOL)saveSessionForUser:(NSString *)user;
 
-// Request building
-- (void)fetchJSONValueForRequest:(NSString *)requestString withArguments:(NSArray *)requestArguments requestType:(TwitterHTTPRequestType)requestType requestServer:(NSString *)requestServer completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock;
-
-// Status updating
-- (void)statusesUpdate:(NSString *)status completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock;
-
-@end
-
-@protocol JSTwitterDelegate <NSObject>
-
-@required
-- (void)twitterAuthFailed:(JSTwitter *)twitter;
-- (void)twitter:(JSTwitter *)twitter authGotRequestToken:(NSString *)token secret:(NSString *)secret;
-- (void)twitter:(JSTwitter *)twitter authGotAcessToken:(OAToken *)token forUser:(NSString *)user;
+//// Request building
+//- (void)fetchJSONValueForRequest:(NSString *)requestString withArguments:(NSArray *)requestArguments requestType:(JSTwitterRequestType)requestType requestServer:(NSString *)requestServer completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock;
+//
+//// Status updating
+//- (void)statusesUpdate:(NSString *)status completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock;
 
 @end
 
+//@protocol JSTwitterDelegate <NSObject>
+//
+//@required
+//- (void)twitterAuthFailed:(JSTwitter *)twitter;
+//- (void)twitter:(JSTwitter *)twitter authGotRequestToken:(NSString *)token secret:(NSString *)secret;
+//- (void)twitter:(JSTwitter *)twitter authGotAcessToken:(OAToken *)token forUser:(NSString *)user;
+//
+//@end
+//
