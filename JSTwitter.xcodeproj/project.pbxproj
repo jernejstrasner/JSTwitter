@@ -23,13 +23,13 @@
 		B8C2401514C5AA79002AD18F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B8C2401714C5AA79002AD18F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B8C2401914C5AA79002AD18F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		B8C2401D14C5AA79002AD18F /* JSTwitter-Info.plist */ = {isa = PBXFileReference; path = "JSTwitter-Info.plist"; sourceTree = "<group>"; };
+		B8C2401D14C5AA79002AD18F /* JSTwitter-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JSTwitter-Info.plist"; sourceTree = "<group>"; };
 		B8C2401F14C5AA79002AD18F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B8C2402114C5AA79002AD18F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B8C2402314C5AA79002AD18F /* JSTwitter-Prefix.pch */ = {isa = PBXFileReference; path = "JSTwitter-Prefix.pch"; sourceTree = "<group>"; };
-		B8C2402414C5AA79002AD18F /* JSAppDelegate.h */ = {isa = PBXFileReference; path = JSAppDelegate.h; sourceTree = "<group>"; };
+		B8C2402314C5AA79002AD18F /* JSTwitter-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JSTwitter-Prefix.pch"; sourceTree = "<group>"; };
+		B8C2402414C5AA79002AD18F /* JSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSAppDelegate.h; sourceTree = "<group>"; };
 		B8C2402514C5AA79002AD18F /* JSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSAppDelegate.m; sourceTree = "<group>"; };
-		B8C2402714C5AA79002AD18F /* JSViewController.h */ = {isa = PBXFileReference; path = JSViewController.h; sourceTree = "<group>"; };
+		B8C2402714C5AA79002AD18F /* JSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSViewController.h; sourceTree = "<group>"; };
 		B8C2402814C5AA79002AD18F /* JSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSViewController.m; sourceTree = "<group>"; };
 		B8C2402B14C5AA79002AD18F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JSViewController_iPhone.xib; sourceTree = "<group>"; };
 		B8C2402E14C5AA79002AD18F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JSViewController_iPad.xib; sourceTree = "<group>"; };
