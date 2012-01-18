@@ -22,6 +22,7 @@
 @property (nonatomic, retain) NSString *requestTokenSecret;
 
 - (void)close;
+- (void)cancel;
 
 @end
 
