@@ -14,6 +14,13 @@
 NSString * const kJSTwitterRestServerURL    = @"http://api.twitter.com/1/";
 NSString * const kJSTwitterOauthServerURL   = @"https://api.twitter.com/oauth/";
 NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
+NSString * const kJSTwitterOauthCallbackURL = @"jstwitter://successful/";
+
+#ifdef DEBUG
+#   define REQUEST_TIMEOUT 60
+#else
+#   define REQUEST_TIMEOUT 20
+#endif
 
 
 @interface JSTwitter () {
@@ -43,6 +50,8 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 	}
 	return _oauthConsumer;
 }
+
+@synthesize username = _username;
 
 #pragma mark - Singleton
 
@@ -98,6 +107,18 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 	[super dealloc];
 }
 
+#pragma mark - Authentication
+
+- (void)authenticateWithCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
+                             errorHandler:(jstwitter_auth_error_block_t)errorHandler
+{
+    JSTwitterAuthController *authController = [JSTwitterAuthController authControllerWithConsumerKey:self.oauthConsumerKey consumerSecret:self.oauthConsumerSecret];
+    authController.completionHandler = completionHandler;
+    authController.errorHandler = errorHandler;
+    UIViewController *viewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+    [viewController presentModalViewController:authController animated:YES];
+}
+
 #pragma mark - OAuth methods
 
 - (void)getRequestTokenWithCompletionHandler:(jstwitter_request_token_success_block_t)completionHandler
@@ -113,10 +134,11 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 		OAConsumer *consumer = [self oauthConsumer];
 		// Initialize the request
 		OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:url consumer:consumer token:nil realm:nil signatureProvider:nil] autorelease];
+        [request setOAuthParameterName:@"oauth_callback" withValue:kJSTwitterOauthCallbackURL];
 		// Set the HTTP method
 		[request setHTTPMethod:@"POST"];
 		// Set the request time out interval in seconds
-		[request setTimeoutInterval:20];
+		[request setTimeoutInterval:REQUEST_TIMEOUT];
 		// Custom OAuthConsumer method to prepare the request
 		[request prepare];
 		
@@ -193,7 +215,7 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 
 - (void)getAcessTokenForRequestToken:(NSString *)requestToken
                   requestTokenSecret:(NSString *)requestTokenSecret
-                   completionHandler:(jstwitter_access_token_success_block_t)completionHandler
+                   completionHandler:(jstwitter_success_block_t)completionHandler
                         errorHandler:(jstwitter_error_block_t)errorHandler
 {
 	dispatch_async(twitterQueue, ^{
@@ -211,7 +233,7 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 		// Set the HTTP method
 		[request setHTTPMethod:@"POST"];
 		// Set the request time out interval in seconds
-		[request setTimeoutInterval:20];
+		[request setTimeoutInterval:REQUEST_TIMEOUT];
 		// Custom OAuthConsumer method to prepare the request
 		[request prepare];
 		
@@ -268,10 +290,11 @@ NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 				}
 				
 				dispatch_async(dispatch_get_main_queue(), ^{
-					// Build the acess token
 					self.oauthToken = [[[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
-					// Request the display of a dialog
-                    completionHandler(self.oauthToken, [accessTokenData valueForKey:@"screen_name"]);
+                    [_username release];
+                    _username = [[accessTokenData valueForKey:@"screen_name"] retain];
+
+                    completionHandler();
 				});
 				
 				[accessTokenData release];

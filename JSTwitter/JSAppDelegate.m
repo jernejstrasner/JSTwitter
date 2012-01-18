@@ -10,6 +10,8 @@
 
 #import "JSViewController.h"
 
+#import "JSTwitter.h"
+
 @implementation JSAppDelegate
 
 @synthesize window = _window;
@@ -33,6 +35,16 @@
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    NSLog(@"Loading Twitter...");
+    
+    
+    [[JSTwitter sharedInstance] authenticateWithCompletionHandler:^{
+        NSLog(@"Authenticated: %@", [[JSTwitter sharedInstance] username]);
+    } errorHandler:^(NSError *error) {
+        NSLog(@"Authentication error!");
+    }];
+    
     return YES;
 }
 

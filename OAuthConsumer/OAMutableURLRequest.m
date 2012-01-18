@@ -165,8 +165,7 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
 		 [[extraOAuthParameters objectForKey:parameterName] URLEncodedString]];
 	}	
     
-    NSString *oauthHeader = [NSString stringWithFormat:@"OAuth realm=\"%@\", oauth_consumer_key=\"%@\", %@oauth_signature_method=\"%@\", oauth_signature=\"%@\", oauth_timestamp=\"%@\", oauth_nonce=\"%@\", oauth_version=\"1.0\"%@",
-                             [realm URLEncodedString],
+    NSString *oauthHeader = [NSString stringWithFormat:@"OAuth oauth_consumer_key=\"%@\", %@oauth_signature_method=\"%@\", oauth_signature=\"%@\", oauth_timestamp=\"%@\", oauth_nonce=\"%@\", oauth_version=\"1.0\"%@",
                              [consumer.key URLEncodedString],
                              oauthToken,
                              [[signatureProvider name] URLEncodedString],
@@ -183,7 +182,7 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
 
 - (void)_generateTimestamp 
 {
-    timestamp = [[NSString stringWithFormat:@"%d", time(NULL)] retain];
+    timestamp = [[NSString stringWithFormat:@"%0.0f", [[NSDate date] timeIntervalSince1970]] retain];
 }
 
 - (void)_generateNonce 
@@ -214,6 +213,10 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
         [parameterPairs addObject:[param URLEncodedNameValuePair]];
     }
     
+    for (NSString *k in extraOAuthParameters) {
+        [parameterPairs addObject:[[OARequestParameter requestParameterWithName:k value:[extraOAuthParameters valueForKey:k]] URLEncodedNameValuePair]];
+    }
+    
     NSArray *sortedPairs = [parameterPairs sortedArrayUsingSelector:@selector(compare:)];
     NSString *normalizedRequestParameters = [sortedPairs componentsJoinedByString:@"&"];
     
@@ -222,7 +225,7 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
 					 [self HTTPMethod],
 					 [[[self URL] URLStringWithoutQuery] URLEncodedString],
 					 [normalizedRequestParameters URLEncodedString]];
-	
+    
 	return ret;
 }
 

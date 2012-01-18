@@ -9,50 +9,19 @@
 #import <UIKit/UIKit.h>
 
 
-#define TWITTER_AUTHORIZE_URL @"https://api.twitter.com/oauth/authorize"
-#define TWITTER_AUTHORIZE_CALLBACK @"http://jernejstrasner.com/twitter_callback/"
-
-@protocol JSTwitterAuthDialogDelegate;
-
-@interface JSTwitterAuthController : UIViewController <UIWebViewDelegate> {
-	id <JSTwitterAuthDialogDelegate> delegate;
-	
-	UINavigationBar *navigationBar;
-	UIWebView *webView;
-	
-	UIActivityIndicatorView *activityIndicator;
-	
-	NSString *_requestToken;
-	NSString *_requestTokenSecret;
-	
-	UIColor *dialogTint;
-}
-
-@property (nonatomic, assign) id <JSTwitterAuthDialogDelegate> delegate;
-
-@property (nonatomic, retain) IBOutlet UINavigationBar *navigationBar;
-@property (nonatomic, retain) IBOutlet UIWebView *webView;
-
-@property (nonatomic, retain) UIColor *dialogTint;
-
-- (id)initWithRequestToken:(NSString *)requestToken requestTokenSecret:(NSString *)requestTokenSecret;
-
-- (void)showLogin;
-- (IBAction)cancel;
-
-@end
+typedef void(^jstwitter_auth_error_block_t)(NSError *error);
+typedef void(^jstwitter_auth_success_block_t)(void);
 
 
-@protocol JSTwitterAuthDialogDelegate <NSObject>
+@interface JSTwitterAuthController : UIViewController <UIWebViewDelegate>
 
-/**
- This is called when the user presses the cancel button
- */
-- (void)twitterAuthDialogDidCancel:(JSTwitterAuthController *)authDialog;
+- (id)initWithConsumerKey:(NSString *)consumerKey
+           consumerSecret:(NSString *)consumerSecret;
 
-/**
- Called when the permissions to the user are successfully granted
- */
-- (void)twitterAuthDialog:(JSTwitterAuthController *)authDialog authorizedRequestToken:(NSString *)requestToken requestTokenSecret:(NSString *)requestTokenSecret;
++ (JSTwitterAuthController *)authControllerWithConsumerKey:(NSString *)consumerKey
+                                            consumerSecret:(NSString *)consumerSecret;
+
+@property (nonatomic, copy) jstwitter_auth_success_block_t completionHandler;
+@property (nonatomic, copy) jstwitter_auth_error_block_t errorHandler;
 
 @end

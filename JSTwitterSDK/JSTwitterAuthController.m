@@ -7,123 +7,132 @@
 //
 
 #import "JSTwitterAuthController.h"
+#import "JSTwitter.h"
 
+@interface JSTwitterAuthController ()
+
+@property (nonatomic, retain) UIWebView *webView;
+
+// 1. stage
+@property (nonatomic, retain) NSString *consumerKey;
+@property (nonatomic, retain) NSString *consumerSecret;
+// 2. stage
+@property (nonatomic, retain) NSString *requestToken;
+@property (nonatomic, retain) NSString *requestTokenSecret;
+
+- (void)close;
+
+@end
 
 @implementation JSTwitterAuthController
 
-@synthesize delegate;
-@synthesize navigationBar, webView;
-@synthesize dialogTint;
+#pragma mark - Properties
 
+@synthesize webView = _webView;
 
-- (id)initWithRequestToken:(NSString *)requestToken requestTokenSecret:(NSString *)requestTokenSecret {
-	if (self = [self initWithNibName:@"JSTwitterAuthDialog" bundle:nil]) {
-		_requestToken = [requestToken retain];
-		_requestTokenSecret = [requestTokenSecret retain];
+@synthesize consumerKey = _consumerKey;
+@synthesize consumerSecret = _consumerSecret;
+
+@synthesize requestToken = _requestToken;
+@synthesize requestTokenSecret = _requestTokenSecret;
+
+@synthesize completionHandler;
+@synthesize errorHandler;
+
+#pragma mark - Lifecycle
+
+- (id)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret
+{
+    self = [self init];
+	if (self) {
+		_consumerKey = [consumerKey retain];
+		_consumerSecret = [consumerSecret retain];
 	}
 	return self;
 }
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	if (dialogTint) {
-		navigationBar.tintColor = dialogTint;
-	}
-	
-	// Add an activity indicator
-	activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-	[activityIndicator setHidesWhenStopped:YES];
-	
-	UIBarButtonItem *activityBarItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
-	navigationBar.topItem.leftBarButtonItem = activityBarItem;
-	[activityBarItem release];
-}
-
-#pragma mark -
-#pragma mark Methods
-
-- (IBAction)cancel {
-	if ([delegate respondsToSelector:@selector(twitterAuthDialogDidCancel:)]) {
-		[delegate twitterAuthDialogDidCancel:self];
-	}
-}
-
-#pragma mark -
-#pragma mark Methods
-
-- (void)showLogin {
-	NSString *url = [NSString stringWithFormat:@"%@?oauth_token=%@&oauth_callback=%@", TWITTER_AUTHORIZE_URL, _requestToken, TWITTER_AUTHORIZE_CALLBACK];
-	[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
-	
-	// Display the loading overlay
-	loadingOverlay = [[KSLoadingOverlay alloc] initInView:self.webView withMessage:@"Nalagam..."];
-	[loadingOverlay show];
-}
-
-#pragma mark -
-#pragma mark UIWebViewDelegate
-
-- (void)webViewDidStartLoad:(UIWebView *)aWebView {
-	[activityIndicator startAnimating];
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
-	if (loadingOverlay) {
-		[loadingOverlay hide];
-	}
-	
-	[activityIndicator stopAnimating];
-}
-
-- (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	
-	if ([[[request URL] absoluteString] hasPrefix:TWITTER_AUTHORIZE_CALLBACK]) {
-
-		if ([delegate respondsToSelector:@selector(twitterAuthDialog:authorizedRequestToken:requestTokenSecret:)]) {
-			[delegate twitterAuthDialog:self authorizedRequestToken:_requestToken requestTokenSecret:_requestTokenSecret];
-		}
-		
-		return NO;
-	}
-	
-	return YES;
-}
-
-#pragma mark -
-#pragma mark MemoryManagement
-
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
     
-    // Release any cached data, images, etc that aren't in use.
+    self.view.backgroundColor = [UIColor whiteColor];
+	// Web view
+    self.webView = [[[UIWebView alloc] initWithFrame:self.view.bounds] autorelease];
+    self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.webView.delegate = self;
+    [self.view addSubview:self.webView];
+    
+    // Get the request token
+    [[JSTwitter sharedInstance] getRequestTokenWithCompletionHandler:^(NSString *token, NSString *tokenSecret) {
+        self.requestToken = token;
+        self.requestTokenSecret = tokenSecret;
+        // Load the auth page
+        NSString *url = [kJSTwitterOauthServerURL stringByAppendingFormat:@"authorize?oauth_token=%@&oauth_callback=%@", self.requestToken, kJSTwitterOauthCallbackURL];
+        [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];        
+    } errorHandler:^(NSError *error) {
+        NSLog(@"Error getting the request token!");
+    }];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-	self.navigationBar = nil;
 	self.webView = nil;
 }
 
-
 - (void)dealloc {
-	[loadingOverlay release];
+	[_webView stopLoading];
+	_webView.delegate = nil;
 	
-	[webView stopLoading];
-	webView.delegate = nil;
-	
+    [_consumerKey release];
+    [_consumerSecret release];
 	[_requestToken release];
 	[_requestTokenSecret release];
-	
-	[activityIndicator release];
-	
-	[dialogTint release];
+    
+    [completionHandler release];
+    [errorHandler release];
 	
     [super dealloc];
 }
 
+#pragma mark - Initialization helpers
+
++ (JSTwitterAuthController *)authControllerWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret
+{
+    return [[[JSTwitterAuthController alloc] initWithConsumerKey:consumerKey consumerSecret:consumerSecret] autorelease];
+}
+
+#pragma mark - UIWebViewDelegate
+
+- (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	
+	if ([[[request URL] absoluteString] hasPrefix:kJSTwitterOauthCallbackURL])
+    {
+        NSLog(@"Getting the access token...");
+        [[JSTwitter sharedInstance] getAcessTokenForRequestToken:self.requestToken
+                                              requestTokenSecret:self.requestTokenSecret
+                                               completionHandler:^{
+                                                   [self close];
+                                                   self.completionHandler();
+                                               }
+                                                    errorHandler:^(NSError *error){
+                                                        [self close];
+                                                        self.errorHandler(error);
+                                                    }];
+		return NO;
+	}
+	return YES;
+}
+
+#pragma mark - Methods
+
+- (void)close
+{
+    if ([self respondsToSelector:@selector(presentingViewController)]) {
+        [self.presentingViewController dismissModalViewControllerAnimated:YES];
+    } else {
+        [self.parentViewController dismissModalViewControllerAnimated:YES];
+    }
+}
 
 @end
