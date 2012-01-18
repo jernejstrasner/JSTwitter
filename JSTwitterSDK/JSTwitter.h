@@ -14,11 +14,13 @@
 #import "JSTwitterAuthController.h"
 
 
+// Constants
 extern NSString * const kJSTwitterRestServerURL;
 extern NSString * const kJSTwitterOauthServerURL;
 extern NSString * const kJSTwitterSearchServerURL;
 extern NSString * const kJSTwitterOauthCallbackURL;
 extern NSString * const kJSTwitterStringBoundary;
+extern NSString * const kJSTwitterAccessTokenDefaultsKey;
 
 // Block types
 typedef void(^jstwitter_success_block_t)(void);

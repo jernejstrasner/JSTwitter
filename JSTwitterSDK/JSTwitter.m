@@ -11,6 +11,7 @@
 #import "JSONKit.h"
 #import "JSTwitter-NSDictionary.h"
 
+
 #define REMEMBER_ACCESS_TOKEN 1
 
 #ifdef DEBUG
@@ -20,11 +21,12 @@
 #endif
 
 // Constants
-NSString * const kJSTwitterRestServerURL    = @"https://api.twitter.com/1/";
-NSString * const kJSTwitterOauthServerURL   = @"https://api.twitter.com/oauth/";
-NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
-NSString * const kJSTwitterOauthCallbackURL = @"jstwitter://successful/";
-NSString * const kJSTwitterStringBoundary   = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
+NSString * const kJSTwitterRestServerURL            = @"https://api.twitter.com/1/";
+NSString * const kJSTwitterOauthServerURL           = @"https://api.twitter.com/oauth/";
+NSString * const kJSTwitterSearchServerURL          = @"http://search.twitter.com/";
+NSString * const kJSTwitterOauthCallbackURL         = @"jstwitter://successful/";
+NSString * const kJSTwitterStringBoundary           = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
+NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";
 
 
 @interface JSTwitter () {
@@ -54,7 +56,17 @@ NSString * const kJSTwitterStringBoundary   = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTP
     _oauthToken = oauthToken;
     [oldVal release];
     // Save the token
-    [oauthToken storeInUserDefaultsWithServiceProviderName:@"com.jstwitter.token" prefix:@""];
+    [oauthToken storeInUserDefaultsWithServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
+}
+
+- (OAToken *)oauthToken
+{
+#if REMEMBER_ACCESS_TOKEN
+    if (_oauthToken == nil) {
+        _oauthToken = [[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
+    }
+#endif
+    return _oauthToken;
 }
 
 @synthesize oauthConsumer = _oauthConsumer;
@@ -89,10 +101,6 @@ NSString * const kJSTwitterStringBoundary   = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTP
 	if (self) {
 		// Set up the dispatch queue
 		twitterQueue = dispatch_queue_create("com.jstwitter.network", NULL);
-        // Load the access token if it exists
-#if REMEMBER_ACCESS_TOKEN
-        self.oauthToken = [[[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:@"com.jstwitter.token" prefix:@""] autorelease];
-#endif
 	}
 	return self;
 }
