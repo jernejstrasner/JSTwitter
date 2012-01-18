@@ -22,6 +22,7 @@ extern NSString * const kJSTwitterOauthCallbackURL;
 
 // Block types
 typedef void(^jstwitter_success_block_t)(void);
+typedef void(^jstwitter_success_data_block_t)(id obj);
 typedef void(^jstwitter_error_block_t)(NSError *error);
 typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString *tokenSecret);
 
@@ -49,10 +50,10 @@ typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString
                    completionHandler:(jstwitter_success_block_t)completionHandler
                         errorHandler:(jstwitter_error_block_t)errorHandler;
 
-//// Request building
-//- (void)fetchJSONValueForRequest:(NSString *)requestString withArguments:(NSArray *)requestArguments requestType:(JSTwitterRequestType)requestType requestServer:(NSString *)requestServer completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock;
-//
-//// Status updating
-//- (void)statusesUpdate:(NSString *)status completion:(void (^)(id result))completionBlock error:(void (^)(NSError *error))errorBlock;
+
+// Requests
+- (void)fetchRequest:(JSTwitterRequest *)request
+           onSuccess:(jstwitter_success_data_block_t)completionHandler
+             onError:(jstwitter_error_block_t)errorHandler;
 
 @end

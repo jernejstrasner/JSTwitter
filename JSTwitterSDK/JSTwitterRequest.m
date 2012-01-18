@@ -7,6 +7,7 @@
 //
 
 #import "JSTwitterRequest.h"
+#import "JSTwitter.h"
 
 @interface JSTwitterRequest () {
     NSMutableDictionary *_parameters;
@@ -47,6 +48,8 @@
     if (self) {
         _endpoint = [endpoint retain];
         _requestType = JSTwitterRequestTypeGET;
+        [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingFormat:@"%@.json", endpoint]]];
+        [self setHTTPMethod:@"GET"];
     }
     return self;
 }
@@ -57,6 +60,15 @@
     if (self) {
         _endpoint = [endpoint retain];
         _requestType = requestType;
+        [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingFormat:@"%@.json", endpoint]]];
+        switch (requestType) {
+            case JSTwitterRequestTypePOST:
+                [self setHTTPMethod:@"POST"];
+                break;
+            default:
+                [self setHTTPMethod:@"GET"];
+                break;
+        }
     }
     return self;
 }

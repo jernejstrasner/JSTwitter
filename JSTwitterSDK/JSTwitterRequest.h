@@ -13,7 +13,7 @@ typedef enum {
     JSTwitterRequestTypePOST
 } JSTwitterRequestType;
 
-@interface JSTwitterRequest : NSObject
+@interface JSTwitterRequest : NSMutableURLRequest
 
 @property (nonatomic, readonly) NSString *endpoint;
 @property (nonatomic, readonly) JSTwitterRequestType requestType;

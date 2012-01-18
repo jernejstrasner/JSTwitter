@@ -41,6 +41,13 @@
     
     [[JSTwitter sharedInstance] authenticateWithCompletionHandler:^{
         NSLog(@"Authenticated: %@", [[JSTwitter sharedInstance] username]);
+        NSLog(@"Gettind test data...");
+        JSTwitterRequest *request = [JSTwitterRequest requestWithRestEndpoint:@"/statuses/home_timeline"];
+        [[JSTwitter sharedInstance] fetchRequest:request onSuccess:^(id obj) {
+            NSLog(@"Got mentions: %@", obj);
+        } onError:^(NSError *error) {
+            NSLog(@"Error fetching mentions: %@", [error localizedDescription]);
+        }];
     } errorHandler:^(NSError *error) {
         NSLog(@"Authentication error!");
     }];
