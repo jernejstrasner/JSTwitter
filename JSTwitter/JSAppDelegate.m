@@ -42,7 +42,7 @@
     [[JSTwitter sharedInstance] setOauthConsumerSecret:@""];
     
     [[JSTwitter sharedInstance] authenticateWithCompletionHandler:^{
-        NSLog(@"Authenticated: %@", [[JSTwitter sharedInstance] username]);
+        NSLog(@"Authenticated: [%@]%@", [[JSTwitter sharedInstance] userID], [[JSTwitter sharedInstance] username]);
         NSLog(@"Gettind test data...");
         JSTwitterRequest *request = [JSTwitterRequest requestWithRestEndpoint:@"/statuses/home_timeline"];
         [[JSTwitter sharedInstance] fetchRequest:request onSuccess:^(id obj) {

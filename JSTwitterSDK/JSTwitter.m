@@ -39,6 +39,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 @property (nonatomic, retain) OAToken *oauthToken;
 @property (nonatomic, retain) OAConsumer *oauthConsumer;
 
+- (void)saveUser:(NSString *)user withID:(NSString *)uid;
 - (NSError *)twitterErrorForStatusCode:(NSInteger)code;
 
 @end
@@ -84,6 +85,19 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 }
 
 @synthesize username = _username;
+@synthesize userID = _userID;
+
+- (void)saveUser:(NSString *)user withID:(NSString *)uid
+{
+    [_username release];
+    [_userID release];
+    _username = [user retain];
+    _userID = [uid retain];
+    // Save to defaults
+    [[NSUserDefaults standardUserDefaults] setValue:user forKey:@"com.jstwitter.user.name"];
+    [[NSUserDefaults standardUserDefaults] setValue:uid forKey:@"com.jstwitter.user.id"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 #pragma mark - Singleton
 
@@ -105,6 +119,9 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 	if (self) {
 		// Set up the dispatch queue
 		twitterQueue = dispatch_queue_create("com.jstwitter.network", NULL);
+        // Get the user info if saved
+        _username = [[[NSUserDefaults standardUserDefaults] valueForKey:@"com.jstwitter.user.name"] retain];
+        _userID = [[[NSUserDefaults standardUserDefaults] valueForKey:@"com.jstwitter.user.id"] retain];
 	}
 	return self;
 }
@@ -117,6 +134,9 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
     [_oauthConsumerSecret release];
 	[_oauthToken release];
 	[_oauthConsumer release];
+    
+    [_username release];
+    [_userID release];
 	
 	[super dealloc];
 }
@@ -248,8 +268,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.oauthToken = [[[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
-                [_username release];
-                _username = [[accessTokenData valueForKey:@"screen_name"] retain];
+                [self saveUser:[accessTokenData valueForKey:@"screen_name"] withID:[accessTokenData valueForKey:@"user_id"]];
 
                 completionHandler();
             });

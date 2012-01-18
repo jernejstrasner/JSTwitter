@@ -40,6 +40,7 @@ typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString
 @property (nonatomic, retain) NSString *oauthConsumerKey;
 @property (nonatomic, retain) NSString *oauthConsumerSecret;
 @property (nonatomic, readonly) NSString *username;
+@property (nonatomic, readonly) NSString *userID;
 
 /**
  
