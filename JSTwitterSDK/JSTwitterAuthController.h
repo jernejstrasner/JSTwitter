@@ -15,12 +15,22 @@ typedef void(^jstwitter_auth_success_block_t)(void);
 
 @interface JSTwitterAuthController : UIViewController <UIWebViewDelegate>
 
+/**
+ 
+ Initialization
+ 
+ */
 - (id)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret;
 
 + (JSTwitterAuthController *)authControllerWithConsumerKey:(NSString *)consumerKey
                                             consumerSecret:(NSString *)consumerSecret;
 
+/**
+ 
+ Completion handlers
+ 
+ */
 @property (nonatomic, copy) jstwitter_auth_success_block_t completionHandler;
 @property (nonatomic, copy) jstwitter_auth_error_block_t errorHandler;
 

@@ -19,12 +19,24 @@ typedef enum {
 @property (nonatomic, readonly) JSTwitterRequestType requestType;
 @property (nonatomic, retain) NSMutableDictionary *twitterParameters;
 
+/**
+ 
+ Initialization
+ 
+ Use the methods below to create a twitter request object.
+ */
 - (id)initWithRestEndpoint:(NSString *)endpoint;
 - (id)initWithRestEndpoint:(NSString *)endpoint requestType:(JSTwitterRequestType)requestType;
 
 + (JSTwitterRequest *)requestWithRestEndpoint:(NSString *)endpoint;
 + (JSTwitterRequest *)requestWithRestEndpoint:(NSString *)endpoint requestType:(JSTwitterRequestType)requestType;
 
+
+/**
+ 
+ Parameters
+ 
+ */
 - (void)addParameter:(id)value withKey:(NSString *)key;
 - (void)removeParameterWithKey:(NSString *)key;
 

@@ -34,14 +34,34 @@ typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString
 @property (nonatomic, retain) NSString *oauthConsumerSecret;
 @property (nonatomic, readonly) NSString *username;
 
-// Singleton
+/**
+ 
+ Singleton
+ 
+ As soon as you access the singleton for the first time, you should set the consumer key
+ and consumer secret, which you get from Twitter's developer website once you set up an app.
+ */
 + (JSTwitter *)sharedInstance;
 
-// Authentication
+
+/**
+ 
+ Authentication
+ 
+ This is the method you should use for authentication. It opens a modal window in the
+ app's root view controller with a web view. It does all the required oauth token exchanges for you.
+ */
 - (void)authenticateWithCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
                              errorHandler:(jstwitter_auth_error_block_t)errorHandler;
 
-// OAuth (internal use)
+
+/**
+ 
+ OAuth token exchange
+ 
+ You can use the methods below to more precisely control the authentication flow.
+ It is suggested to use authenticateWithCompletionHandler:errorHandler: instead.
+ */
 - (void)getRequestTokenWithCompletionHandler:(jstwitter_request_token_success_block_t)completionHandler
                                 errorHandler:(jstwitter_error_block_t)errorHandler;
 
@@ -51,7 +71,12 @@ typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString
                         errorHandler:(jstwitter_error_block_t)errorHandler;
 
 
-// Requests
+/**
+ 
+ Request fetching
+ 
+ This methods is used to fetch data for a JSTwitterRequest object.
+ */
 - (void)fetchRequest:(JSTwitterRequest *)request
            onSuccess:(jstwitter_success_data_block_t)completionHandler
              onError:(jstwitter_error_block_t)errorHandler;
