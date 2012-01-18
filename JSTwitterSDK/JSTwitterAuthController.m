@@ -12,6 +12,7 @@
 @interface JSTwitterAuthController ()
 
 @property (nonatomic, retain) UIWebView *webView;
+@property (nonatomic, retain) UIActivityIndicatorView *activityIndicator;
 
 // 1. stage
 @property (nonatomic, retain) NSString *consumerKey;
@@ -30,6 +31,7 @@
 
 @synthesize navigationBar = _navigationBar;
 @synthesize webView = _webView;
+@synthesize activityIndicator = _activityIndicator;
 
 @synthesize consumerKey = _consumerKey;
 @synthesize consumerSecret = _consumerSecret;
@@ -65,8 +67,16 @@
     
     // Cancel button
     UIBarButtonItem *cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)] autorelease];
+    
+    // Activity indicator
+    self.activityIndicator = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite] autorelease];
+    self.activityIndicator.hidesWhenStopped = YES;
+    UIBarButtonItem *activityButton = [[[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator] autorelease];
+    
+    // Navigation item
     UINavigationItem *navigationItem = [[[UINavigationItem alloc] initWithTitle:@"Twitter"] autorelease];
     navigationItem.leftBarButtonItem = cancelButton;
+    navigationItem.rightBarButtonItem = activityButton;
     [self.navigationBar pushNavigationItem:navigationItem animated:NO];
     
 	// Web view
@@ -76,13 +86,18 @@
     [self.view addSubview:self.webView];
     
     // Get the request token
+    [self.activityIndicator startAnimating];
     [[JSTwitter sharedInstance] getRequestTokenWithCompletionHandler:^(NSString *token, NSString *tokenSecret) {
+        [self.activityIndicator stopAnimating];
         self.requestToken = token;
         self.requestTokenSecret = tokenSecret;
         // Load the auth page
         NSString *url = [kJSTwitterOauthServerURL stringByAppendingFormat:@"authorize?oauth_token=%@&oauth_callback=%@", self.requestToken, kJSTwitterOauthCallbackURL];
         [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];        
-    } errorHandler:self.errorHandler];
+    } errorHandler:^(NSError *error) {
+        [self close];
+        self.errorHandler(error);
+    }];
 }
 
 - (void)viewDidUnload {
@@ -98,6 +113,7 @@
     [_webView release];
     
     [_navigationBar release];
+    [_activityIndicator release];
 	
     [_consumerKey release];
     [_consumerSecret release];
@@ -123,6 +139,7 @@
 	
 	if ([[[request URL] absoluteString] hasPrefix:kJSTwitterOauthCallbackURL])
     {
+        [self.activityIndicator startAnimating];
         [[JSTwitter sharedInstance] getAcessTokenForRequestToken:self.requestToken requestTokenSecret:self.requestTokenSecret completionHandler:^{
             [self close];
             self.completionHandler();
@@ -133,6 +150,16 @@
 		return NO;
 	}
 	return YES;
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    [self.activityIndicator startAnimating];
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    [self.activityIndicator stopAnimating];
 }
 
 #pragma mark - Methods

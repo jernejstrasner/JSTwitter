@@ -11,7 +11,7 @@
 #import "JSONKit.h"
 #import "JSTwitter-NSDictionary.h"
 
-#define REMEMBER_ACCESS_TOKEN 0
+#define REMEMBER_ACCESS_TOKEN 1
 
 #ifdef DEBUG
 #   define REQUEST_TIMEOUT 60
