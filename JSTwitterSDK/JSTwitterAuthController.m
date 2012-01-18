@@ -28,6 +28,7 @@
 
 #pragma mark - Properties
 
+@synthesize navigationBar = _navigationBar;
 @synthesize webView = _webView;
 
 @synthesize consumerKey = _consumerKey;
@@ -54,9 +55,22 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
     
+    // Background
     self.view.backgroundColor = [UIColor whiteColor];
+    
+    // Navigation bar
+    self.navigationBar = [[[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, 44.0f)] autorelease];
+    self.navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.navigationBar];
+    
+    // Cancel button
+    UIBarButtonItem *cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)] autorelease];
+    UINavigationItem *navigationItem = [[[UINavigationItem alloc] initWithTitle:@"Twitter"] autorelease];
+    navigationItem.leftBarButtonItem = cancelButton;
+    [self.navigationBar pushNavigationItem:navigationItem animated:NO];
+    
 	// Web view
-    self.webView = [[[UIWebView alloc] initWithFrame:self.view.bounds] autorelease];
+    self.webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0.0f, 44.0f, self.view.bounds.size.width, self.view.bounds.size.height-44.0f)] autorelease];
     self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
@@ -68,9 +82,7 @@
         // Load the auth page
         NSString *url = [kJSTwitterOauthServerURL stringByAppendingFormat:@"authorize?oauth_token=%@&oauth_callback=%@", self.requestToken, kJSTwitterOauthCallbackURL];
         [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];        
-    } errorHandler:^(NSError *error) {
-        NSLog(@"Error getting the request token!");
-    }];
+    } errorHandler:self.errorHandler];
 }
 
 - (void)viewDidUnload {
@@ -83,6 +95,9 @@
 - (void)dealloc {
 	[_webView stopLoading];
 	_webView.delegate = nil;
+    [_webView release];
+    
+    [_navigationBar release];
 	
     [_consumerKey release];
     [_consumerSecret release];
@@ -108,17 +123,13 @@
 	
 	if ([[[request URL] absoluteString] hasPrefix:kJSTwitterOauthCallbackURL])
     {
-        NSLog(@"Getting the access token...");
-        [[JSTwitter sharedInstance] getAcessTokenForRequestToken:self.requestToken
-                                              requestTokenSecret:self.requestTokenSecret
-                                               completionHandler:^{
-                                                   [self close];
-                                                   self.completionHandler();
-                                               }
-                                                    errorHandler:^(NSError *error){
-                                                        [self close];
-                                                        self.errorHandler(error);
-                                                    }];
+        [[JSTwitter sharedInstance] getAcessTokenForRequestToken:self.requestToken requestTokenSecret:self.requestTokenSecret completionHandler:^{
+            [self close];
+            self.completionHandler();
+        } errorHandler:^(NSError *error){
+            [self close];
+            self.errorHandler(error);
+        }];
 		return NO;
 	}
 	return YES;
@@ -133,6 +144,12 @@
     } else {
         [self.parentViewController dismissModalViewControllerAnimated:YES];
     }
+}
+
+- (void)cancel
+{
+    [self close];
+    self.errorHandler(nil);
 }
 
 @end

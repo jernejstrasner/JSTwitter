@@ -11,18 +11,20 @@
 #import "JSONKit.h"
 #import "JSTwitter-NSDictionary.h"
 
-// Constants
-NSString * const kJSTwitterRestServerURL    = @"https://api.twitter.com/1/";
-NSString * const kJSTwitterOauthServerURL   = @"https://api.twitter.com/oauth/";
-NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
-NSString * const kJSTwitterOauthCallbackURL = @"jstwitter://successful/";
-NSString * const kJSTwitterStringBoundary   = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
+#define REMEMBER_ACCESS_TOKEN 0
 
 #ifdef DEBUG
 #   define REQUEST_TIMEOUT 60
 #else
 #   define REQUEST_TIMEOUT 20
 #endif
+
+// Constants
+NSString * const kJSTwitterRestServerURL    = @"https://api.twitter.com/1/";
+NSString * const kJSTwitterOauthServerURL   = @"https://api.twitter.com/oauth/";
+NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
+NSString * const kJSTwitterOauthCallbackURL = @"jstwitter://successful/";
+NSString * const kJSTwitterStringBoundary   = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 
 
 @interface JSTwitter () {
@@ -88,7 +90,9 @@ NSString * const kJSTwitterStringBoundary   = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTP
 		// Set up the dispatch queue
 		twitterQueue = dispatch_queue_create("com.jstwitter.network", NULL);
         // Load the access token if it exists
+#if REMEMBER_ACCESS_TOKEN
         self.oauthToken = [[[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:@"com.jstwitter.token" prefix:@""] autorelease];
+#endif
 	}
 	return self;
 }

@@ -15,6 +15,8 @@ typedef void(^jstwitter_auth_success_block_t)(void);
 
 @interface JSTwitterAuthController : UIViewController <UIWebViewDelegate>
 
+@property (nonatomic, retain) UINavigationBar *navigationBar;
+
 /**
  
  Initialization
