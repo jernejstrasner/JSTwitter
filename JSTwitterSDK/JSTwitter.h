@@ -14,6 +14,9 @@
 #import "JSTwitterAuthController.h"
 
 
+// Macros
+#define JSTWLog(format, ...) NSLog((@"[Line %d] " format), __LINE__, ##__VA_ARGS__);
+
 // Constants
 extern NSString * const kJSTwitterRestServerURL;
 extern NSString * const kJSTwitterOauthServerURL;
@@ -21,6 +24,8 @@ extern NSString * const kJSTwitterSearchServerURL;
 extern NSString * const kJSTwitterOauthCallbackURL;
 extern NSString * const kJSTwitterStringBoundary;
 extern NSString * const kJSTwitterAccessTokenDefaultsKey;
+extern NSString * const kJSTwitterNetworkErrorDomain;
+extern NSString * const kJSTwitterOtherErrorDomain;
 
 // Block types
 typedef void(^jstwitter_success_block_t)(void);

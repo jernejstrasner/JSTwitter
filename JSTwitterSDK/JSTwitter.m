@@ -27,6 +27,8 @@ NSString * const kJSTwitterSearchServerURL          = @"http://search.twitter.co
 NSString * const kJSTwitterOauthCallbackURL         = @"jstwitter://successful/";
 NSString * const kJSTwitterStringBoundary           = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";
+NSString * const kJSTwitterNetworkErrorDomain       = @"com.jstwitter.error.network";
+NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.other";
 
 
 @interface JSTwitter () {
@@ -36,6 +38,8 @@ NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";
 
 @property (nonatomic, retain) OAToken *oauthToken;
 @property (nonatomic, retain) OAConsumer *oauthConsumer;
+
+- (NSError *)twitterErrorForStatusCode:(NSInteger)code;
 
 @end
 
@@ -165,65 +169,30 @@ NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";
 		// Check the response
 		NSInteger requestStatusCode = [response statusCode];
         
-		if (error == nil) {
-			// If request was successful check the HTTP response codes
-			// Log errors to the console
-			switch (requestStatusCode) {
-				case 200:
-					NSLog(@"%@: Request sucessfull!", [self class]);
-					break;
-				case 400:
-					NSLog(@"%@: Bad request or rate limited.", [self class]);
-					break;
-				case 401:
-					NSLog(@"%@: Authorization failed.", [self class]);
-					break;
-				case 500:
-					NSLog(@"%@: Internal server error.", [self class]);
-					break;
-				case 502:
-					NSLog(@"%@: Twitter is down or being upgraded.", [self class]);
-					break;
-				case 503:
-					NSLog(@"%@: The Twitter servers are up, but overloaded with requests. Try again later.", [self class]);
-					break;
-				default:
-					NSLog(@"%@: %d: %@", [self class], requestStatusCode, [NSHTTPURLResponse localizedStringForStatusCode:requestStatusCode]);
-					break;
-			}
-			// Call the sucess/error function on the main thread
-			if (requestStatusCode != 200) {
-				// Call the error function
-				dispatch_async(dispatch_get_main_queue(), ^{
-                    errorHandler(nil);
-				});
-			} else {
-				// Get the request token data
-				// Parse the returned data
-				NSArray *parameters = [jsonData componentsSeparatedByString:@"&"];
-				NSMutableDictionary *requestTokenData = [NSMutableDictionary new];
-				NSArray *temp;
-				for (NSString *parameter in parameters) {
-					temp = [parameter componentsSeparatedByString:@"="];
-					[requestTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
-				}
-				
-				dispatch_async(dispatch_get_main_queue(), ^{
-					// Request the display of a dialog
-                    completionHandler([requestTokenData valueForKey:@"oauth_token"], [requestTokenData valueForKey:@"oauth_token_secret"]);
-				});
-				
-				[requestTokenData release];
-			}
-			
-		} else {
-			// The NSURLConnection could not be made
-			NSLog(@"%@: NSURLConnection error: %@", [self class], [error localizedDescription]);
-			// Call the error function
-			dispatch_async(dispatch_get_main_queue(), ^{
-                errorHandler(nil);
-			});
-		}
+        if (requestStatusCode != 200) {
+            // Get the error object
+            NSError *error = [self twitterErrorForStatusCode:requestStatusCode];
+            // Call the error function
+            dispatch_async(dispatch_get_main_queue(), ^{
+                errorHandler(error);
+            });
+        } else {
+            // Parse the returned data
+            NSArray *parameters = [jsonData componentsSeparatedByString:@"&"];
+            NSMutableDictionary *requestTokenData = [NSMutableDictionary new];
+            NSArray *temp;
+            for (NSString *parameter in parameters) {
+                temp = [parameter componentsSeparatedByString:@"="];
+                [requestTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Request the display of a dialog
+                completionHandler([requestTokenData valueForKey:@"oauth_token"], [requestTokenData valueForKey:@"oauth_token_secret"]);
+            });
+            
+            [requestTokenData release];
+        }
 	});
 }
 
@@ -260,70 +229,33 @@ NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";
 		// Check the response
 		NSInteger requestStatusCode = [response statusCode];
 		
-		if (error == nil) {
-			// If request was successful check the HTTP response codes
-			// Log errors to the console
-			switch (requestStatusCode) {
-				case 200:
-					NSLog(@"%@: Request sucessfull!", [self class]);
-					break;
-				case 400:
-					NSLog(@"%@: Bad request or rate limited.", [self class]);
-					break;
-				case 401:
-					NSLog(@"%@: Authorization failed.", [self class]);
-					break;
-				case 500:
-					NSLog(@"%@: Internal server error.", [self class]);
-					break;
-				case 502:
-					NSLog(@"%@: Twitter is down or being upgraded.", [self class]);
-					break;
-				case 503:
-					NSLog(@"%@: The Twitter servers are up, but overloaded with requests. Try again later.", [self class]);
-					break;
-				default:
-					NSLog(@"%@: %d: %@", [self class], requestStatusCode, [NSHTTPURLResponse localizedStringForStatusCode:requestStatusCode]);
-					break;
-			}
-			// Call the sucess/error function on the main thread
-			if (requestStatusCode != 200) {
-				// Call the error function
-				dispatch_async(dispatch_get_main_queue(), ^{
-                    errorHandler(nil);
-				});
-			} else {
-				// Get the request token data
-				// Parse the returned data
-                NSLog(@"Data: %@", jsonData);
-				NSArray *parameters = [jsonData componentsSeparatedByString:@"&"];
-				NSMutableDictionary *accessTokenData = [NSMutableDictionary new];
-				NSArray *temp;
-				for (NSString *parameter in parameters) {
-					temp = [parameter componentsSeparatedByString:@"="];
-					[accessTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
-				}
-				
-				dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"Got access token data: %@", accessTokenData);
-					self.oauthToken = [[[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
-                    [_username release];
-                    _username = [[accessTokenData valueForKey:@"screen_name"] retain];
+        if (requestStatusCode != 200) {
+            // Get the error object
+            NSError *error = [self twitterErrorForStatusCode:requestStatusCode];
+            // Call the error function
+            dispatch_async(dispatch_get_main_queue(), ^{
+                errorHandler(error);
+            });
+        } else {
+            // Parse the returned data
+            NSArray *parameters = [jsonData componentsSeparatedByString:@"&"];
+            NSMutableDictionary *accessTokenData = [NSMutableDictionary new];
+            NSArray *temp;
+            for (NSString *parameter in parameters) {
+                temp = [parameter componentsSeparatedByString:@"="];
+                [accessTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.oauthToken = [[[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
+                [_username release];
+                _username = [[accessTokenData valueForKey:@"screen_name"] retain];
 
-                    completionHandler();
-				});
-				
-				[accessTokenData release];
-			}
-			
-		} else {
-			// The NSURLConnection could not be made
-			NSLog(@"%@: NSURLConnection error: %@", [self class], [error localizedDescription]);
-			// Call the error function
-			dispatch_async(dispatch_get_main_queue(), ^{
-                errorHandler(nil);
-			});
-		}
+                completionHandler();
+            });
+            
+            [accessTokenData release];
+        }
 	});
 }
 
@@ -371,48 +303,21 @@ NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";
         NSString *jsonData = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
         
         NSInteger requestStatusCode = [response statusCode];
-        // The response object
         id resolvedResponse = nil;
-        // If request was successful check the HTTP response codes
-        // Log errors to the console
-        switch (requestStatusCode) {
-            case 200:
-                NSLog(@"%@: Request sucessfull!", [self class]);
-                break;
-            case 400:
-                NSLog(@"%@: Bad request or rate limited.", [self class]);
-                break;
-            case 401:
-                NSLog(@"%@: Authorization failed.", [self class]);
-                break;
-            case 500:
-                NSLog(@"%@: Internal server error.", [self class]);
-                break;
-            case 502:
-                NSLog(@"%@: Twitter is down or being upgraded.", [self class]);
-                break;
-            case 503:
-                NSLog(@"%@: The Twitter servers are up, but overloaded with requests. Try again later.", [self class]);
-                break;
-            default:
-                NSLog(@"%@: %d: %@", [self class], requestStatusCode, [NSHTTPURLResponse localizedStringForStatusCode:requestStatusCode]);
-                break;
-        }
-        // Call the sucess/error function on the main thread
+
         if (requestStatusCode != 200) {
-            // Decode the JSON response
+            // Error
+            error = [self twitterErrorForStatusCode:requestStatusCode];
+            // Decode the JSON response (if any)
             resolvedResponse = [jsonData objectFromJSONString];
-            // Debug
-            NSLog(@"%@: Error:\nRequest: %@\nError description: %@", [self class], [resolvedResponse objectForKey:@"request"], [resolvedResponse objectForKey:@"error"]);
-            // Prepare the error
-            NSError *theError = [NSError errorWithDomain:@"com.jernejstrasner.twitter" code:100 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[resolvedResponse objectForKey:@"error"], NSLocalizedDescriptionKey, nil]];
             // Execute the error block
             dispatch_async(dispatch_get_main_queue(), ^{
-                errorHandler(theError);
+                errorHandler(error);
             });
         } else {
-            // Resolve the response to an object
-            // If there is an error on the server side it will get resolved to an NSMutableDictionary with "error" and "request" keys
+            // Resolve the response to an object.
+            // If there is an error on the server side it will get resolved
+            // to an NSMutableDictionary with "error" and "request" keys.
             resolvedResponse = [jsonData objectFromJSONString];
             // Execute the completion block
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -422,6 +327,37 @@ NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";
         
         [pool drain];
     });
+}
+
+#pragma mark - Utility methods
+
+- (NSError *)twitterErrorForStatusCode:(NSInteger)code
+{
+    NSString *errorDescription;
+    switch (code) {
+        case 200:
+            return nil;
+            break;
+        case 400:
+            errorDescription = @"Bad request or rate limited";
+            break;
+        case 401:
+            errorDescription = @"Authorization failed";
+            break;
+        case 500:
+            errorDescription = @"Internal server error";
+            break;
+        case 502:
+            errorDescription = @"Twitter is down or being upgraded";
+            break;
+        case 503:
+            errorDescription = @"The Twitter servers are up, but overloaded with requests";
+            break;
+        default:
+            errorDescription = [NSHTTPURLResponse localizedStringForStatusCode:code];
+            break;
+    }
+    return [NSError errorWithDomain:kJSTwitterNetworkErrorDomain code:code userInfo:[NSDictionary dictionaryWithObject:errorDescription forKey:NSLocalizedDescriptionKey]];
 }
 
 @end
