@@ -9,35 +9,25 @@
 #import "JSTwitterRequest.h"
 #import "JSTwitter.h"
 
-@interface JSTwitterRequest () {
-    NSMutableDictionary *_parameters;
-}
-
-@end
-
 @implementation JSTwitterRequest
 
 #pragma mark - Properties
 
 @synthesize endpoint = _endpoint;
 @synthesize requestType = _requestType;
-
-- (NSDictionary *)parameters
-{
-    return [NSDictionary dictionaryWithDictionary:_parameters];
-}
+@synthesize twitterParameters = _twitterParameters;
 
 - (void)addParameter:(id)value withKey:(NSString *)key
 {
-    if (_parameters == nil) {
-        _parameters = [[NSMutableDictionary alloc] init];
+    if (_twitterParameters == nil) {
+        _twitterParameters = [[NSMutableDictionary alloc] init];
     }
-    [_parameters setValue:value forKey:key];
+    [_twitterParameters setValue:value forKey:key];
 }
 
 - (void)removeParameterWithKey:(NSString *)key
 {
-    [_parameters removeObjectForKey:key];
+    [_twitterParameters removeObjectForKey:key];
 }
 
 #pragma mark - Object lifecycle
@@ -48,6 +38,11 @@
     if (self) {
         _endpoint = [endpoint retain];
         _requestType = JSTwitterRequestTypeGET;
+        // Prevent a duplicate forward slash
+        // Doubles cause a bad OAuth signature!
+        if ([kJSTwitterRestServerURL hasSuffix:@"/"] && [endpoint hasPrefix:@"/"]) {
+            endpoint = [endpoint substringWithRange:NSMakeRange(1, endpoint.length-1)];
+        }
         [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingFormat:@"%@.json", endpoint]]];
         [self setHTTPMethod:@"GET"];
     }
@@ -75,7 +70,7 @@
 
 - (void)dealloc
 {
-    [_parameters release];
+    [_twitterParameters release];
     [_endpoint release];
     [super dealloc];
 }

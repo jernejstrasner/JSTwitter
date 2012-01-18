@@ -9,12 +9,14 @@
 #import "JSTwitter.h"
 
 #import "JSONKit.h"
+#import "JSTwitter-NSDictionary.h"
 
 // Constants
 NSString * const kJSTwitterRestServerURL    = @"https://api.twitter.com/1/";
 NSString * const kJSTwitterOauthServerURL   = @"https://api.twitter.com/oauth/";
 NSString * const kJSTwitterSearchServerURL  = @"http://search.twitter.com/";
 NSString * const kJSTwitterOauthCallbackURL = @"jstwitter://successful/";
+NSString * const kJSTwitterStringBoundary   = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 
 #ifdef DEBUG
 #   define REQUEST_TIMEOUT 60
@@ -331,15 +333,16 @@ NSString * const kJSTwitterOauthCallbackURL = @"jstwitter://successful/";
         
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
-        // Copy the request to prevent changes
-        JSTwitterRequest *twitterRequest = [_request copy];
-        
         // Initialize the request
-        OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:twitterRequest.URL consumer:[self oauthConsumer] token:[self oauthToken] realm:nil signatureProvider:[[OAHMAC_SHA1SignatureProvider alloc] init]] autorelease];
-        [request setHTTPMethod:twitterRequest.HTTPMethod];
-        NSMutableArray *params = [[NSMutableArray alloc] init];
-        for (NSString *k in twitterRequest.parameters) {
-            [params addObject:[OARequestParameter requestParameterWithName:k value:[twitterRequest.parameters valueForKey:k]]];
+        OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:_request.URL
+                                                                        consumer:[self oauthConsumer]
+                                                                           token:[self oauthToken]
+                                                                           realm:nil
+                                                               signatureProvider:nil] autorelease];
+        [request setHTTPMethod:_request.HTTPMethod];
+        NSMutableArray *params = [NSMutableArray array];
+        for (NSString *k in _request.twitterParameters) {
+            [params addObject:[OARequestParameter requestParameterWithName:k value:[_request.twitterParameters valueForKey:k]]];
         }
         [request setParameters:params];
         

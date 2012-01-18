@@ -17,7 +17,7 @@ typedef enum {
 
 @property (nonatomic, readonly) NSString *endpoint;
 @property (nonatomic, readonly) JSTwitterRequestType requestType;
-@property (nonatomic, readonly) NSDictionary *parameters;
+@property (nonatomic, retain) NSMutableDictionary *twitterParameters;
 
 - (id)initWithRestEndpoint:(NSString *)endpoint;
 - (id)initWithRestEndpoint:(NSString *)endpoint requestType:(JSTwitterRequestType)requestType;

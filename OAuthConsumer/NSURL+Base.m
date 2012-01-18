@@ -31,8 +31,12 @@
 
 - (NSString *)URLStringWithoutQuery 
 {
-    NSArray *parts = [[self absoluteString] componentsSeparatedByString:@"?"];
-    return [parts objectAtIndex:0];
+    NSString *urlString = [self absoluteString];
+    NSRange range = [urlString rangeOfString:@"?"];
+    if (range.location != NSNotFound) {
+        return [urlString substringToIndex:range.location];
+    }
+    return urlString;
 }
 
 @end

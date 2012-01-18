@@ -160,9 +160,9 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
 	// Adding the optional parameters in sorted order isn't required by the OAuth spec, but it makes it possible to hard-code expected values in the unit tests.
 	for(NSString *parameterName in [[extraOAuthParameters allKeys] sortedArrayUsingSelector:@selector(compare:)])
 	{
-		[extraParameters appendFormat:@", %@=\"%@\"",
-		 [parameterName URLEncodedString],
-		 [[extraOAuthParameters objectForKey:parameterName] URLEncodedString]];
+        [extraParameters appendFormat:@", %@=\"%@\"",
+        [parameterName URLEncodedString],
+        [[extraOAuthParameters objectForKey:parameterName] URLEncodedString]];
 	}	
     
     NSString *oauthHeader = [NSString stringWithFormat:@"OAuth oauth_consumer_key=\"%@\", %@oauth_signature_method=\"%@\", oauth_signature=\"%@\", oauth_timestamp=\"%@\", oauth_nonce=\"%@\", oauth_version=\"1.0\"%@",

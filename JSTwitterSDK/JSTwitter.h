@@ -18,7 +18,7 @@ extern NSString * const kJSTwitterRestServerURL;
 extern NSString * const kJSTwitterOauthServerURL;
 extern NSString * const kJSTwitterSearchServerURL;
 extern NSString * const kJSTwitterOauthCallbackURL;
-
+extern NSString * const kJSTwitterStringBoundary;
 
 // Block types
 typedef void(^jstwitter_success_block_t)(void);
