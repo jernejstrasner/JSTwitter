@@ -38,6 +38,8 @@
     
     NSLog(@"Loading Twitter...");
     
+    [[JSTwitter sharedInstance] setOauthConsumerKey:@""];
+    [[JSTwitter sharedInstance] setOauthConsumerSecret:@""];
     
     [[JSTwitter sharedInstance] authenticateWithCompletionHandler:^{
         NSLog(@"Authenticated: %@", [[JSTwitter sharedInstance] username]);
