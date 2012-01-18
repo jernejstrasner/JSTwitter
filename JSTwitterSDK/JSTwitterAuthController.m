@@ -105,6 +105,8 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 	self.webView = nil;
+    self.navigationBar = nil;
+    self.activityIndicator = nil;
 }
 
 - (void)dealloc {
