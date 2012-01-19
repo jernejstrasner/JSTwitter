@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		B81E836E14C5AD3000E2ACA5 /* JSTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E836514C5AD3000E2ACA5 /* JSTwitter.m */; };
 		B81E838214C5BFF700E2ACA5 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E837F14C5BFF700E2ACA5 /* JSONKit.m */; };
-		B81E83A414C5C21E00E2ACA5 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = B81E838614C5C21E00E2ACA5 /* Base64Transcoder.c */; };
 		B81E83A514C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E838914C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m */; };
 		B81E83A614C5C21E00E2ACA5 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E838B14C5C21E00E2ACA5 /* NSString+URLEncoding.m */; };
 		B81E83A714C5C21E00E2ACA5 /* NSURL+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E838D14C5C21E00E2ACA5 /* NSURL+Base.m */; };
@@ -28,6 +27,8 @@
 		B81E847C14C81C4800E2ACA5 /* JSOAuthRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E847B14C81C4700E2ACA5 /* JSOAuthRequest.m */; };
 		B81E848014C81D9C00E2ACA5 /* JSOAuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E847F14C81D9C00E2ACA5 /* JSOAuthToken.m */; };
 		B81E848314C81DA900E2ACA5 /* JSOAuthConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E848214C81DA900E2ACA5 /* JSOAuthConsumer.m */; };
+		B81E849A14C82CB300E2ACA5 /* NSString+JSOAuthSigning.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E849914C82CB300E2ACA5 /* NSString+JSOAuthSigning.m */; };
+		B81E84AA14C83BA800E2ACA5 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = B81E84A814C83BA800E2ACA5 /* Base64Transcoder.c */; };
 		B8C2401614C5AA79002AD18F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C2401514C5AA79002AD18F /* UIKit.framework */; };
 		B8C2401814C5AA79002AD18F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C2401714C5AA79002AD18F /* Foundation.framework */; };
 		B8C2401A14C5AA79002AD18F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C2401914C5AA79002AD18F /* CoreGraphics.framework */; };
@@ -46,8 +47,6 @@
 		B81E836714C5AD3000E2ACA5 /* JSTwitterAuthController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSTwitterAuthController.m; sourceTree = "<group>"; };
 		B81E837E14C5BFF700E2ACA5 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		B81E837F14C5BFF700E2ACA5 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
-		B81E838614C5C21E00E2ACA5 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
-		B81E838714C5C21E00E2ACA5 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		B81E838814C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+Parameters.h"; sourceTree = "<group>"; };
 		B81E838914C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+Parameters.m"; sourceTree = "<group>"; };
 		B81E838A14C5C21E00E2ACA5 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
@@ -84,6 +83,10 @@
 		B81E847F14C81D9C00E2ACA5 /* JSOAuthToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSOAuthToken.m; sourceTree = "<group>"; };
 		B81E848114C81DA900E2ACA5 /* JSOAuthConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSOAuthConsumer.h; sourceTree = "<group>"; };
 		B81E848214C81DA900E2ACA5 /* JSOAuthConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSOAuthConsumer.m; sourceTree = "<group>"; };
+		B81E849814C82CB300E2ACA5 /* NSString+JSOAuthSigning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JSOAuthSigning.h"; sourceTree = "<group>"; };
+		B81E849914C82CB300E2ACA5 /* NSString+JSOAuthSigning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JSOAuthSigning.m"; sourceTree = "<group>"; };
+		B81E84A814C83BA800E2ACA5 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
+		B81E84A914C83BA800E2ACA5 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		B8C2401114C5AA79002AD18F /* JSTwitter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSTwitter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8C2401514C5AA79002AD18F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B8C2401714C5AA79002AD18F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -117,6 +120,7 @@
 		B81E836314C5AD3000E2ACA5 /* JSTwitterSDK */ = {
 			isa = PBXGroup;
 			children = (
+				B81E84A714C83BA800E2ACA5 /* Crypto */,
 				B81E836414C5AD3000E2ACA5 /* JSTwitter.h */,
 				B81E836514C5AD3000E2ACA5 /* JSTwitter.m */,
 				B81E83B614C5C6AE00E2ACA5 /* JSTwitterRequest.h */,
@@ -131,6 +135,8 @@
 				B81E847F14C81D9C00E2ACA5 /* JSOAuthToken.m */,
 				B81E848114C81DA900E2ACA5 /* JSOAuthConsumer.h */,
 				B81E848214C81DA900E2ACA5 /* JSOAuthConsumer.m */,
+				B81E849814C82CB300E2ACA5 /* NSString+JSOAuthSigning.h */,
+				B81E849914C82CB300E2ACA5 /* NSString+JSOAuthSigning.m */,
 			);
 			path = JSTwitterSDK;
 			sourceTree = "<group>";
@@ -147,7 +153,6 @@
 		B81E838414C5C21E00E2ACA5 /* OAuthConsumer */ = {
 			isa = PBXGroup;
 			children = (
-				B81E838514C5C21E00E2ACA5 /* Crypto */,
 				B81E83A314C5C21E00E2ACA5 /* OAuthConsumer.h */,
 				B81E838814C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.h */,
 				B81E838914C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m */,
@@ -178,11 +183,11 @@
 			path = OAuthConsumer;
 			sourceTree = "<group>";
 		};
-		B81E838514C5C21E00E2ACA5 /* Crypto */ = {
+		B81E84A714C83BA800E2ACA5 /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				B81E838714C5C21E00E2ACA5 /* Base64Transcoder.h */,
-				B81E838614C5C21E00E2ACA5 /* Base64Transcoder.c */,
+				B81E84A814C83BA800E2ACA5 /* Base64Transcoder.c */,
+				B81E84A914C83BA800E2ACA5 /* Base64Transcoder.h */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -311,7 +316,6 @@
 				B8C2402914C5AA79002AD18F /* JSViewController.m in Sources */,
 				B81E836E14C5AD3000E2ACA5 /* JSTwitter.m in Sources */,
 				B81E838214C5BFF700E2ACA5 /* JSONKit.m in Sources */,
-				B81E83A414C5C21E00E2ACA5 /* Base64Transcoder.c in Sources */,
 				B81E83A514C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m in Sources */,
 				B81E83A614C5C21E00E2ACA5 /* NSString+URLEncoding.m in Sources */,
 				B81E83A714C5C21E00E2ACA5 /* NSURL+Base.m in Sources */,
@@ -330,6 +334,8 @@
 				B81E847C14C81C4800E2ACA5 /* JSOAuthRequest.m in Sources */,
 				B81E848014C81D9C00E2ACA5 /* JSOAuthToken.m in Sources */,
 				B81E848314C81DA900E2ACA5 /* JSOAuthConsumer.m in Sources */,
+				B81E849A14C82CB300E2ACA5 /* NSString+JSOAuthSigning.m in Sources */,
+				B81E84AA14C83BA800E2ACA5 /* Base64Transcoder.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
