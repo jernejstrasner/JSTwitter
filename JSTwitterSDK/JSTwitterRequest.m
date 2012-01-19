@@ -14,7 +14,39 @@
 #pragma mark - Properties
 
 @synthesize endpoint = _endpoint;
+
+- (void)setEndpoint:(NSString *)endpoint
+{
+    if (_endpoint == endpoint) return;
+    // Prevent a duplicate forward slash
+    // Doubles cause a bad OAuth signature!
+    if ([kJSTwitterRestServerURL hasSuffix:@"/"] && [endpoint hasPrefix:@"/"]) {
+        endpoint = [endpoint substringWithRange:NSMakeRange(1, endpoint.length-1)];
+    }
+    [endpoint retain];
+    id oldVal = _endpoint;
+    _endpoint = endpoint;
+    [oldVal release];
+    // Set the request URL
+    [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingFormat:@"%@.json", endpoint]]];
+}
+
 @synthesize requestType = _requestType;
+
+- (void)setRequestType:(JSTwitterRequestType)requestType
+{
+    if (_requestType == requestType) return;
+    _requestType = requestType;
+    switch (requestType) {
+        case JSTwitterRequestTypePOST:
+            [self setHTTPMethod:@"POST"];
+            break;
+        default:
+            [self setHTTPMethod:@"GET"];
+            break;
+    }
+}
+
 @synthesize twitterParameters = _twitterParameters;
 
 - (void)addParameter:(id)value withKey:(NSString *)key
@@ -36,15 +68,8 @@
 {
     self = [super init];
     if (self) {
-        _endpoint = [endpoint retain];
-        _requestType = JSTwitterRequestTypeGET;
-        // Prevent a duplicate forward slash
-        // Doubles cause a bad OAuth signature!
-        if ([kJSTwitterRestServerURL hasSuffix:@"/"] && [endpoint hasPrefix:@"/"]) {
-            endpoint = [endpoint substringWithRange:NSMakeRange(1, endpoint.length-1)];
-        }
-        [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingFormat:@"%@.json", endpoint]]];
-        [self setHTTPMethod:@"GET"];
+        self.endpoint = endpoint;
+        self.requestType = JSTwitterRequestTypeGET;
     }
     return self;
 }
@@ -53,17 +78,8 @@
 {
     self = [super init];
     if (self) {
-        _endpoint = [endpoint retain];
-        _requestType = requestType;
-        [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingFormat:@"%@.json", endpoint]]];
-        switch (requestType) {
-            case JSTwitterRequestTypePOST:
-                [self setHTTPMethod:@"POST"];
-                break;
-            default:
-                [self setHTTPMethod:@"GET"];
-                break;
-        }
+        self.endpoint = endpoint;
+        self.requestType = requestType;
     }
     return self;
 }
