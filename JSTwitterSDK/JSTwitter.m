@@ -9,7 +9,7 @@
 #import "JSTwitter.h"
 
 #import "JSONKit.h"
-#import "JSTwitter-NSDictionary.h"
+#import "NSDictionary+HTTP.h"
 
 
 #define REMEMBER_ACCESS_TOKEN 1

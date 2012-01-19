@@ -6,9 +6,9 @@
 //  Copyright 2011 JernejStrasner.com. All rights reserved.
 //
 
-#import "JSTwitter-NSDictionary.h"
+#import "NSDictionary+HTTP.h"
 
-@implementation NSDictionary (JSTwitter)
+@implementation NSDictionary (JSTwitterHTTP)
 
 - (NSString *)generateGETParameters {
 	NSMutableArray *pairs = [NSMutableArray new];

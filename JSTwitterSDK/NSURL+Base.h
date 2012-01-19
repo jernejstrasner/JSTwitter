@@ -1,5 +1,5 @@
 //
-//  NSString+JSOAuthSigning.h
+//  NSURL+Base.h
 //  JSTwitter
 //
 //  Created by Jernej Strasner on 1/19/12.
@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (JSOAuthSigning)
 
-- (NSString *)HMACSHA1SignatureWithSecret:(NSString *)secret;
+@interface NSURL (JSBase)
+
+- (NSString *)URLStringWithoutQuery;
 
 @end

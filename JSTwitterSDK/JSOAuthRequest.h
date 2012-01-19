@@ -20,5 +20,6 @@
 - (id)initWithURL:(NSURL *)URL consumer:(JSOAuthConsumer *)consumer token:(JSOAuthToken *)token;
 
 - (void)setOAuthParameterValue:(id)value forKey:(NSString *)key;
+- (void)prepare;
 
 @end

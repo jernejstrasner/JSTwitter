@@ -11,7 +11,7 @@
 #import "JSONKit.h"
 
 
-@interface NSDictionary (JSTwitter)
+@interface NSDictionary (JSTwitterHTTP)
 
 // Network data encoding methods
 - (NSString *)generateGETParameters;
