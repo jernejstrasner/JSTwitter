@@ -25,6 +25,7 @@
 		B81E83B814C5C6AE00E2ACA5 /* JSTwitterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E83B714C5C6AE00E2ACA5 /* JSTwitterRequest.m */; };
 		B81E83D214C5DB3B00E2ACA5 /* JSTwitter-NSDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E83D114C5DB3B00E2ACA5 /* JSTwitter-NSDictionary.m */; };
 		B81E841714C6323C00E2ACA5 /* JSTwitterAuthController.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E836714C5AD3000E2ACA5 /* JSTwitterAuthController.m */; };
+		B81E847C14C81C4800E2ACA5 /* JSOAuthRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E847B14C81C4700E2ACA5 /* JSOAuthRequest.m */; };
 		B81E848014C81D9C00E2ACA5 /* JSOAuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E847F14C81D9C00E2ACA5 /* JSOAuthToken.m */; };
 		B81E848314C81DA900E2ACA5 /* JSOAuthConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E848214C81DA900E2ACA5 /* JSOAuthConsumer.m */; };
 		B8C2401614C5AA79002AD18F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C2401514C5AA79002AD18F /* UIKit.framework */; };
@@ -77,6 +78,8 @@
 		B81E83B714C5C6AE00E2ACA5 /* JSTwitterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSTwitterRequest.m; sourceTree = "<group>"; };
 		B81E83D014C5DB3B00E2ACA5 /* JSTwitter-NSDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSTwitter-NSDictionary.h"; sourceTree = "<group>"; };
 		B81E83D114C5DB3B00E2ACA5 /* JSTwitter-NSDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSTwitter-NSDictionary.m"; sourceTree = "<group>"; };
+		B81E847A14C81C4700E2ACA5 /* JSOAuthRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSOAuthRequest.h; sourceTree = "<group>"; };
+		B81E847B14C81C4700E2ACA5 /* JSOAuthRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSOAuthRequest.m; sourceTree = "<group>"; };
 		B81E847E14C81D9C00E2ACA5 /* JSOAuthToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSOAuthToken.h; sourceTree = "<group>"; };
 		B81E847F14C81D9C00E2ACA5 /* JSOAuthToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSOAuthToken.m; sourceTree = "<group>"; };
 		B81E848114C81DA900E2ACA5 /* JSOAuthConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSOAuthConsumer.h; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				B81E836714C5AD3000E2ACA5 /* JSTwitterAuthController.m */,
 				B81E83D014C5DB3B00E2ACA5 /* JSTwitter-NSDictionary.h */,
 				B81E83D114C5DB3B00E2ACA5 /* JSTwitter-NSDictionary.m */,
+				B81E847A14C81C4700E2ACA5 /* JSOAuthRequest.h */,
+				B81E847B14C81C4700E2ACA5 /* JSOAuthRequest.m */,
 				B81E847E14C81D9C00E2ACA5 /* JSOAuthToken.h */,
 				B81E847F14C81D9C00E2ACA5 /* JSOAuthToken.m */,
 				B81E848114C81DA900E2ACA5 /* JSOAuthConsumer.h */,
@@ -322,6 +327,7 @@
 				B81E83B814C5C6AE00E2ACA5 /* JSTwitterRequest.m in Sources */,
 				B81E83D214C5DB3B00E2ACA5 /* JSTwitter-NSDictionary.m in Sources */,
 				B81E841714C6323C00E2ACA5 /* JSTwitterAuthController.m in Sources */,
+				B81E847C14C81C4800E2ACA5 /* JSOAuthRequest.m in Sources */,
 				B81E848014C81D9C00E2ACA5 /* JSOAuthToken.m in Sources */,
 				B81E848314C81DA900E2ACA5 /* JSOAuthConsumer.m in Sources */,
 			);
