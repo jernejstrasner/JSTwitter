@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <dispatch/dispatch.h>
-#import "OAuthConsumer.h"
 
 #import "JSTwitterRequest.h"
 #import "JSTwitterAuthController.h"

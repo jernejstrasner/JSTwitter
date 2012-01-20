@@ -10,6 +10,7 @@
 
 #import "JSONKit.h"
 #import "NSDictionary+HTTP.h"
+#import "JSOAuthRequest.h"
 
 
 #define REMEMBER_ACCESS_TOKEN 1
@@ -36,8 +37,8 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 	dispatch_queue_t twitterQueue;
 }
 
-@property (nonatomic, retain) OAToken *oauthToken;
-@property (nonatomic, retain) OAConsumer *oauthConsumer;
+@property (nonatomic, retain) JSOAuthToken *oauthToken;
+@property (nonatomic, retain) JSOAuthConsumer *oauthConsumer;
 
 - (void)saveUser:(NSString *)user withID:(NSString *)uid;
 - (NSError *)twitterErrorForStatusCode:(NSInteger)code;
@@ -53,7 +54,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 
 @synthesize oauthToken = _oauthToken;
 
-- (void)setOauthToken:(OAToken *)oauthToken
+- (void)setOauthToken:(JSOAuthToken *)oauthToken
 {
     if (_oauthToken == oauthToken) return;
     [oauthToken retain];
@@ -61,14 +62,14 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
     _oauthToken = oauthToken;
     [oldVal release];
     // Save the token
-    [oauthToken storeInUserDefaultsWithServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
+//    [oauthToken storeInUserDefaultsWithServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
 }
 
-- (OAToken *)oauthToken
+- (JSOAuthToken *)oauthToken
 {
 #if REMEMBER_ACCESS_TOKEN
     if (_oauthToken == nil) {
-        _oauthToken = [[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
+//        _oauthToken = [[JSOAuthToken alloc] initWithUserDefaultsUsingServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
     }
 #endif
     return _oauthToken;
@@ -76,10 +77,10 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 
 @synthesize oauthConsumer = _oauthConsumer;
 
-- (OAConsumer *)oauthConsumer
+- (JSOAuthConsumer *)oauthConsumer
 {
 	if (!_oauthConsumer) {
-		_oauthConsumer = [[OAConsumer alloc] initWithKey:self.oauthConsumerKey secret:self.oauthConsumerSecret];
+		_oauthConsumer = [[JSOAuthConsumer alloc] initWithKey:self.oauthConsumerKey secret:self.oauthConsumerSecret];
 	}
 	return _oauthConsumer;
 }
@@ -169,10 +170,10 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 		NSURL *url = [NSURL URLWithString:theURLString];
 		
 		// The consumer object
-		OAConsumer *consumer = [self oauthConsumer];
+		JSOAuthConsumer *consumer = [self oauthConsumer];
 		// Initialize the request
-		OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:url consumer:consumer token:nil realm:nil signatureProvider:nil] autorelease];
-        [request setOAuthParameterName:@"oauth_callback" withValue:kJSTwitterOauthCallbackURL];
+		JSOAuthRequest *request = [[[JSOAuthRequest alloc] initWithURL:url consumer:consumer token:nil] autorelease];
+        [request setOAuthParameterValue:kJSTwitterOauthCallbackURL forKey:@"oauth_callback"];
 		// Set the HTTP method
 		[request setHTTPMethod:@"POST"];
 		// Set the request time out interval in seconds
@@ -228,11 +229,11 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 		NSURL *url = [NSURL URLWithString:theURLString];
 		
 		// The consumer object
-		OAConsumer *consumer = [self oauthConsumer];
+		JSOAuthConsumer *consumer = [self oauthConsumer];
 		// The request token to exchange
-		OAToken *token = [[[OAToken alloc] initWithKey:requestToken secret:requestTokenSecret] autorelease];
+		JSOAuthToken *token = [[[JSOAuthToken alloc] initWithKey:requestToken secret:requestTokenSecret] autorelease];
 		// Initialize the request
-		OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:url consumer:consumer token:token realm:nil signatureProvider:nil] autorelease];
+		JSOAuthRequest *request = [[[JSOAuthRequest alloc] initWithURL:url consumer:consumer token:token] autorelease];
 		// Set the HTTP method
 		[request setHTTPMethod:@"POST"];
 		// Set the request time out interval in seconds
@@ -267,7 +268,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.oauthToken = [[[OAToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
+                self.oauthToken = [[[JSOAuthToken alloc] initWithKey:[accessTokenData valueForKey:@"oauth_token"] secret:[accessTokenData valueForKey:@"oauth_token_secret"]] autorelease];
                 [self saveUser:[accessTokenData valueForKey:@"screen_name"] withID:[accessTokenData valueForKey:@"user_id"]];
 
                 completionHandler();
@@ -297,17 +298,13 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
         // Initialize the request
-        OAMutableURLRequest *request = [[[OAMutableURLRequest alloc] initWithURL:_request.URL
-                                                                        consumer:[self oauthConsumer]
-                                                                           token:[self oauthToken]
-                                                                           realm:nil
-                                                               signatureProvider:nil] autorelease];
+        JSOAuthRequest *request = [[[JSOAuthRequest alloc] initWithURL:_request.URL consumer:[self oauthConsumer] token:[self oauthToken]] autorelease];
         [request setHTTPMethod:_request.HTTPMethod];
-        NSMutableArray *params = [NSMutableArray array];
-        for (NSString *k in _request.twitterParameters) {
-            [params addObject:[OARequestParameter requestParameterWithName:k value:[_request.twitterParameters valueForKey:k]]];
-        }
-        [request setParameters:params];
+//        NSMutableArray *params = [NSMutableArray array];
+//        for (NSString *k in _request.twitterParameters) {
+//            [params addObject:[OARequestParameter requestParameterWithName:k value:[_request.twitterParameters valueForKey:k]]];
+//        }
+//        [request setParameters:params];
         
         // Set the request time out interval in seconds
         [request setTimeoutInterval:REQUEST_TIMEOUT];

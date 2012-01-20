@@ -12,6 +12,8 @@
 #import "NSURL+Base.h"
 #import "NSString+JSOAuthSigning.h"
 
+#import "OAHMAC_SHA1SignatureProvider.h"
+
 @interface JSOAuthRequest ()
 
 @property (nonatomic, assign) NSTimeInterval timestamp;
@@ -150,8 +152,15 @@
     [oauthHeader appendString:[joinedParameters componentsJoinedByString:@", "]];
     
     // Add the signature
-    NSString *signature = [[self signatureBaseString] HMACSHA1SignatureWithSecret:[NSString stringWithFormat:@"%@&%@", [self.consumer.secret URLEncodedString], [self.token.secret URLEncodedString]]];
-    [oauthHeader appendFormat:@", oauth_signature=\"%@\"", signature];
+    NSMutableString *signingString = [NSMutableString string];
+    [signingString appendString:[self.consumer.secret URLEncodedString]];
+    [signingString appendString:@"&"];
+    if (self.token != nil) {
+        [signingString appendString:[self.token.secret URLEncodedString]];
+    }
+//    NSString *signature = [[self signatureBaseString] HMACSHA1SignatureWithSecret:signingString];
+    NSString *signature = [[[[OAHMAC_SHA1SignatureProvider alloc] init] autorelease] signClearText:[self signatureBaseString] withSecret:signingString];
+    [oauthHeader appendFormat:@", oauth_signature=\"%@\"", [signature URLEncodedString]];
     
     // Finally, set the header value
     [self setValue:oauthHeader forHTTPHeaderField:@"Authorization"];
@@ -171,7 +180,7 @@
 					 [self HTTPMethod],
 					 [[[self URL] URLStringWithoutQuery] URLEncodedString],
 					 [[signatureParameters componentsJoinedByString:@"&"] URLEncodedString]];
-    
+
 	return ret;
 }
 
