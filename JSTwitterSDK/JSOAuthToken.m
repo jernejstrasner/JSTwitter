@@ -87,4 +87,11 @@
     return self;
 }
 
+#pragma mark - Description
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@: key=%@, secret=%@>", [self class], self.key, self.secret];
+}
+
 @end
