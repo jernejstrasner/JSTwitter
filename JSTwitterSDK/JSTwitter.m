@@ -198,19 +198,26 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
                 errorHandler(error);
             });
         } else {
-            // Parse the returned data
-            NSArray *parameters = [jsonData componentsSeparatedByString:@"&"];
             NSMutableDictionary *requestTokenData = [NSMutableDictionary new];
-            NSArray *temp;
-            for (NSString *parameter in parameters) {
-                temp = [parameter componentsSeparatedByString:@"="];
-                [requestTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
+            if ([jsonData length] > 0) {
+                // Parse the returned data
+                NSArray *parameters = [jsonData componentsSeparatedByString:@"&"];
+                NSArray *temp;
+                for (NSString *parameter in parameters) {
+                    temp = [parameter componentsSeparatedByString:@"="];
+                    [requestTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // Request the display of a dialog
+                    completionHandler([requestTokenData valueForKey:@"oauth_token"], [requestTokenData valueForKey:@"oauth_token_secret"]);
+                });
+            } else {
+                JSTWLog(@"Could not parse the received data!");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // Request the display of a dialog
+                    errorHandler([NSError errorWithDomain:kJSTwitterOtherErrorDomain code:1 userInfo:[NSDictionary dictionaryWithObject:@"Could not parse received data!" forKey:NSLocalizedDescriptionKey]]);
+                });
             }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // Request the display of a dialog
-                completionHandler([requestTokenData valueForKey:@"oauth_token"], [requestTokenData valueForKey:@"oauth_token_secret"]);
-            });
             
             [requestTokenData release];
         }
