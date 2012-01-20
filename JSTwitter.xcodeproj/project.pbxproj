@@ -9,16 +9,6 @@
 /* Begin PBXBuildFile section */
 		B81E836E14C5AD3000E2ACA5 /* JSTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E836514C5AD3000E2ACA5 /* JSTwitter.m */; };
 		B81E838214C5BFF700E2ACA5 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E837F14C5BFF700E2ACA5 /* JSONKit.m */; };
-		B81E83A514C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E838914C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m */; };
-		B81E83A814C5C21E00E2ACA5 /* OAAsynchronousDataFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E838F14C5C21E00E2ACA5 /* OAAsynchronousDataFetcher.m */; };
-		B81E83A914C5C21E00E2ACA5 /* OAConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E839114C5C21E00E2ACA5 /* OAConsumer.m */; };
-		B81E83AA14C5C21E00E2ACA5 /* OADataFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E839314C5C21E00E2ACA5 /* OADataFetcher.m */; };
-		B81E83AB14C5C21E00E2ACA5 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E839514C5C21E00E2ACA5 /* OAHMAC_SHA1SignatureProvider.m */; };
-		B81E83AC14C5C21E00E2ACA5 /* OAMutableURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E839714C5C21E00E2ACA5 /* OAMutableURLRequest.m */; };
-		B81E83AD14C5C21E00E2ACA5 /* OAPlaintextSignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E839914C5C21E00E2ACA5 /* OAPlaintextSignatureProvider.m */; };
-		B81E83AE14C5C21E00E2ACA5 /* OARequestParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E839B14C5C21E00E2ACA5 /* OARequestParameter.m */; };
-		B81E83AF14C5C21E00E2ACA5 /* OAServiceTicket.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E839D14C5C21E00E2ACA5 /* OAServiceTicket.m */; };
-		B81E83B014C5C21E00E2ACA5 /* OAToken.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E83A014C5C21E00E2ACA5 /* OAToken.m */; };
 		B81E83B814C5C6AE00E2ACA5 /* JSTwitterRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E83B714C5C6AE00E2ACA5 /* JSTwitterRequest.m */; };
 		B81E83D214C5DB3B00E2ACA5 /* NSDictionary+HTTP.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E83D114C5DB3B00E2ACA5 /* NSDictionary+HTTP.m */; };
 		B81E841714C6323C00E2ACA5 /* JSTwitterAuthController.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E836714C5AD3000E2ACA5 /* JSTwitterAuthController.m */; };
@@ -47,28 +37,6 @@
 		B81E836714C5AD3000E2ACA5 /* JSTwitterAuthController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSTwitterAuthController.m; sourceTree = "<group>"; };
 		B81E837E14C5BFF700E2ACA5 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		B81E837F14C5BFF700E2ACA5 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
-		B81E838814C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+Parameters.h"; sourceTree = "<group>"; };
-		B81E838914C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+Parameters.m"; sourceTree = "<group>"; };
-		B81E838E14C5C21E00E2ACA5 /* OAAsynchronousDataFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAAsynchronousDataFetcher.h; sourceTree = "<group>"; };
-		B81E838F14C5C21E00E2ACA5 /* OAAsynchronousDataFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAAsynchronousDataFetcher.m; sourceTree = "<group>"; };
-		B81E839014C5C21E00E2ACA5 /* OAConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAConsumer.h; sourceTree = "<group>"; };
-		B81E839114C5C21E00E2ACA5 /* OAConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAConsumer.m; sourceTree = "<group>"; };
-		B81E839214C5C21E00E2ACA5 /* OADataFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OADataFetcher.h; sourceTree = "<group>"; };
-		B81E839314C5C21E00E2ACA5 /* OADataFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OADataFetcher.m; sourceTree = "<group>"; };
-		B81E839414C5C21E00E2ACA5 /* OAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
-		B81E839514C5C21E00E2ACA5 /* OAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
-		B81E839614C5C21E00E2ACA5 /* OAMutableURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAMutableURLRequest.h; sourceTree = "<group>"; };
-		B81E839714C5C21E00E2ACA5 /* OAMutableURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAMutableURLRequest.m; sourceTree = "<group>"; };
-		B81E839814C5C21E00E2ACA5 /* OAPlaintextSignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAPlaintextSignatureProvider.h; sourceTree = "<group>"; };
-		B81E839914C5C21E00E2ACA5 /* OAPlaintextSignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAPlaintextSignatureProvider.m; sourceTree = "<group>"; };
-		B81E839A14C5C21E00E2ACA5 /* OARequestParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OARequestParameter.h; sourceTree = "<group>"; };
-		B81E839B14C5C21E00E2ACA5 /* OARequestParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OARequestParameter.m; sourceTree = "<group>"; };
-		B81E839C14C5C21E00E2ACA5 /* OAServiceTicket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAServiceTicket.h; sourceTree = "<group>"; };
-		B81E839D14C5C21E00E2ACA5 /* OAServiceTicket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAServiceTicket.m; sourceTree = "<group>"; };
-		B81E839E14C5C21E00E2ACA5 /* OASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OASignatureProviding.h; sourceTree = "<group>"; };
-		B81E839F14C5C21E00E2ACA5 /* OAToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAToken.h; sourceTree = "<group>"; };
-		B81E83A014C5C21E00E2ACA5 /* OAToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAToken.m; sourceTree = "<group>"; };
-		B81E83A314C5C21E00E2ACA5 /* OAuthConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuthConsumer.h; sourceTree = "<group>"; };
 		B81E83B614C5C6AE00E2ACA5 /* JSTwitterRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSTwitterRequest.h; sourceTree = "<group>"; };
 		B81E83B714C5C6AE00E2ACA5 /* JSTwitterRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSTwitterRequest.m; sourceTree = "<group>"; };
 		B81E83D014C5DB3B00E2ACA5 /* NSDictionary+HTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+HTTP.h"; sourceTree = "<group>"; };
@@ -154,35 +122,6 @@
 			path = JSONKit;
 			sourceTree = "<group>";
 		};
-		B81E838414C5C21E00E2ACA5 /* OAuthConsumer */ = {
-			isa = PBXGroup;
-			children = (
-				B81E83A314C5C21E00E2ACA5 /* OAuthConsumer.h */,
-				B81E838814C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.h */,
-				B81E838914C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m */,
-				B81E838E14C5C21E00E2ACA5 /* OAAsynchronousDataFetcher.h */,
-				B81E838F14C5C21E00E2ACA5 /* OAAsynchronousDataFetcher.m */,
-				B81E839014C5C21E00E2ACA5 /* OAConsumer.h */,
-				B81E839114C5C21E00E2ACA5 /* OAConsumer.m */,
-				B81E839214C5C21E00E2ACA5 /* OADataFetcher.h */,
-				B81E839314C5C21E00E2ACA5 /* OADataFetcher.m */,
-				B81E839414C5C21E00E2ACA5 /* OAHMAC_SHA1SignatureProvider.h */,
-				B81E839514C5C21E00E2ACA5 /* OAHMAC_SHA1SignatureProvider.m */,
-				B81E839614C5C21E00E2ACA5 /* OAMutableURLRequest.h */,
-				B81E839714C5C21E00E2ACA5 /* OAMutableURLRequest.m */,
-				B81E839814C5C21E00E2ACA5 /* OAPlaintextSignatureProvider.h */,
-				B81E839914C5C21E00E2ACA5 /* OAPlaintextSignatureProvider.m */,
-				B81E839A14C5C21E00E2ACA5 /* OARequestParameter.h */,
-				B81E839B14C5C21E00E2ACA5 /* OARequestParameter.m */,
-				B81E839C14C5C21E00E2ACA5 /* OAServiceTicket.h */,
-				B81E839D14C5C21E00E2ACA5 /* OAServiceTicket.m */,
-				B81E839E14C5C21E00E2ACA5 /* OASignatureProviding.h */,
-				B81E839F14C5C21E00E2ACA5 /* OAToken.h */,
-				B81E83A014C5C21E00E2ACA5 /* OAToken.m */,
-			);
-			path = OAuthConsumer;
-			sourceTree = "<group>";
-		};
 		B81E84A714C83BA800E2ACA5 /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
@@ -195,7 +134,6 @@
 		B8C2400614C5AA79002AD18F = {
 			isa = PBXGroup;
 			children = (
-				B81E838414C5C21E00E2ACA5 /* OAuthConsumer */,
 				B81E837C14C5BFF700E2ACA5 /* JSONKit */,
 				B81E836314C5AD3000E2ACA5 /* JSTwitterSDK */,
 				B8C2401B14C5AA79002AD18F /* JSTwitter */,
@@ -316,16 +254,6 @@
 				B8C2402914C5AA79002AD18F /* JSViewController.m in Sources */,
 				B81E836E14C5AD3000E2ACA5 /* JSTwitter.m in Sources */,
 				B81E838214C5BFF700E2ACA5 /* JSONKit.m in Sources */,
-				B81E83A514C5C21E00E2ACA5 /* NSMutableURLRequest+Parameters.m in Sources */,
-				B81E83A814C5C21E00E2ACA5 /* OAAsynchronousDataFetcher.m in Sources */,
-				B81E83A914C5C21E00E2ACA5 /* OAConsumer.m in Sources */,
-				B81E83AA14C5C21E00E2ACA5 /* OADataFetcher.m in Sources */,
-				B81E83AB14C5C21E00E2ACA5 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
-				B81E83AC14C5C21E00E2ACA5 /* OAMutableURLRequest.m in Sources */,
-				B81E83AD14C5C21E00E2ACA5 /* OAPlaintextSignatureProvider.m in Sources */,
-				B81E83AE14C5C21E00E2ACA5 /* OARequestParameter.m in Sources */,
-				B81E83AF14C5C21E00E2ACA5 /* OAServiceTicket.m in Sources */,
-				B81E83B014C5C21E00E2ACA5 /* OAToken.m in Sources */,
 				B81E83B814C5C6AE00E2ACA5 /* JSTwitterRequest.m in Sources */,
 				B81E83D214C5DB3B00E2ACA5 /* NSDictionary+HTTP.m in Sources */,
 				B81E841714C6323C00E2ACA5 /* JSTwitterAuthController.m in Sources */,

@@ -12,8 +12,6 @@
 #import "NSURL+Base.h"
 #import "NSString+JSOAuthSigning.h"
 
-#import "OAHMAC_SHA1SignatureProvider.h"
-
 @interface JSOAuthRequest ()
 
 @property (nonatomic, assign) NSTimeInterval timestamp;
