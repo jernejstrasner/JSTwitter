@@ -300,11 +300,11 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
         // Initialize the request
         JSOAuthRequest *request = [[[JSOAuthRequest alloc] initWithURL:_request.URL consumer:[self oauthConsumer] token:[self oauthToken]] autorelease];
         [request setHTTPMethod:_request.HTTPMethod];
-//        NSMutableArray *params = [NSMutableArray array];
-//        for (NSString *k in _request.twitterParameters) {
-//            [params addObject:[OARequestParameter requestParameterWithName:k value:[_request.twitterParameters valueForKey:k]]];
-//        }
-//        [request setParameters:params];
+//        // POST
+//        NSData *postData = [encodedParameterPairs dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+//        [self setHTTPBody:postData];
+//        [self setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+//        [self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         
         // Set the request time out interval in seconds
         [request setTimeoutInterval:REQUEST_TIMEOUT];
