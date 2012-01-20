@@ -18,7 +18,7 @@
 - (NSString *)HMACSHA1SignatureWithSecret:(NSString *)secret
 {
     NSData *stringData = [self dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *secretData = [self dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *secretData = [secret dataUsingEncoding:NSUTF8StringEncoding];
     
     unsigned char result[CC_SHA1_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA1, [secretData bytes], [secretData length], [stringData bytes], [stringData length], result);

@@ -158,8 +158,7 @@
     if (self.token != nil) {
         [signingString appendString:[self.token.secret URLEncodedString]];
     }
-//    NSString *signature = [[self signatureBaseString] HMACSHA1SignatureWithSecret:signingString];
-    NSString *signature = [[[[OAHMAC_SHA1SignatureProvider alloc] init] autorelease] signClearText:[self signatureBaseString] withSecret:signingString];
+    NSString *signature = [[self signatureBaseString] HMACSHA1SignatureWithSecret:signingString];
     [oauthHeader appendFormat:@", oauth_signature=\"%@\"", [signature URLEncodedString]];
     
     // Finally, set the header value
