@@ -62,14 +62,14 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
     _oauthToken = oauthToken;
     [oldVal release];
     // Save the token
-//    [oauthToken storeInUserDefaultsWithServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
+    [oauthToken storeWithKey:kJSTwitterAccessTokenDefaultsKey];
 }
 
 - (JSOAuthToken *)oauthToken
 {
 #if REMEMBER_ACCESS_TOKEN
     if (_oauthToken == nil) {
-//        _oauthToken = [[JSOAuthToken alloc] initWithUserDefaultsUsingServiceProviderName:kJSTwitterAccessTokenDefaultsKey prefix:@""];
+        _oauthToken = [[JSOAuthToken alloc] initFromStorageWithKey:kJSTwitterAccessTokenDefaultsKey];
     }
 #endif
     return _oauthToken;
