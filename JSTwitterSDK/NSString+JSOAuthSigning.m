@@ -28,7 +28,7 @@
     
     Base64EncodeData(result, CC_SHA1_DIGEST_LENGTH, base64_result, &base64_result_length);
     
-    return [NSString stringWithFormat:@"%s", base64_result];
+    return [[[NSString alloc] initWithData:[NSData dataWithBytes:base64_result length:base64_result_length] encoding:NSUTF8StringEncoding] autorelease];
 }
 
 @end
