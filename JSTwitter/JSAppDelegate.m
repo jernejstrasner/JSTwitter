@@ -52,6 +52,7 @@
         }];
     } errorHandler:^(NSError *error) {
         NSLog(@"Authentication error!");
+        [[JSTwitter sharedInstance] clearSession];
     }];
     
     return YES;
