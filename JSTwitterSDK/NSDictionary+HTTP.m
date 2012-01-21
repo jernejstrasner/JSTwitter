@@ -7,6 +7,7 @@
 //
 
 #import "NSDictionary+HTTP.h"
+#import "JSONKit.h"
 
 @implementation NSDictionary (JSTwitterHTTP)
 
