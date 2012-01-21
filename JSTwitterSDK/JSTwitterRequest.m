@@ -107,9 +107,7 @@
 #pragma mark - Request preparation
 
 - (void)prepare
-{
-    [super prepare];
-    
+{    
     if (self.requestType == JSTwitterRequestTypePOST) {
         // POST
         NSString *currentURL = [[self URL] absoluteString];
@@ -155,6 +153,9 @@
         
         [self setURL:[NSURL URLWithString:currentURL]];
     }
+    
+    // We call this after we're done with setting request parameters as otherwise the signature will be incorrect
+    [super prepare];
 }
 
 @end
