@@ -41,9 +41,12 @@
 
 - (id)initFromStorageWithKey:(NSString *)key
 {
-    self = [[NSUserDefaults standardUserDefaults] valueForKey:key];
-    if (self == nil) {
-        JSTWLog(@"Could not find token with key %@", key);
+    NSData *data = [[NSUserDefaults standardUserDefaults] valueForKey:key];
+    if (data) {
+        self = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (self == nil) {
+            JSTWLog(@"Could not find token with key %@", key);
+        }
     }
     return self;
 }
@@ -59,7 +62,7 @@
 
 - (void)storeWithKey:(NSString *)key
 {
-    [[NSUserDefaults standardUserDefaults] setValue:self forKey:key];
+    [[NSUserDefaults standardUserDefaults] setValue:[NSKeyedArchiver archivedDataWithRootObject:self] forKey:key];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
