@@ -125,7 +125,7 @@
             [self setURL:[NSURL URLWithString:currentURL]];
         }        
 
-        NSData *postData = [self.twitterParameters generatePOSTBodyWithBoundary:kJSTwitterStringBoundary];
+        NSData *postData = [self.twitterParameters generatePOSTBodyWithBoundary:nil];
         [self setHTTPBody:postData];
         [self setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
         [self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
