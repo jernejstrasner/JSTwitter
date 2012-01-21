@@ -38,6 +38,9 @@
 }
 
 - (NSData *)generatePOSTBodyWithBoundary:(NSString *)boundary {
+    if (boundary == nil) {
+        return [[self generateGETParameters] dataUsingEncoding:NSUTF8StringEncoding];
+    }
 	NSMutableData *body = [NSMutableData data];
 	NSString *beginLine = [NSString stringWithFormat:@"\r\n--%@\r\n", boundary];
 	
