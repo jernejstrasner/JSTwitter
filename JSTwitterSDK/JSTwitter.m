@@ -335,6 +335,9 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
             error = [self twitterErrorForStatusCode:requestStatusCode];
             // Decode the JSON response (if any)
             resolvedResponse = [jsonData objectFromJSONString];
+            if ([resolvedResponse valueForKey:@"error"]) {
+                JSTWLog(@"Error: %@", [resolvedResponse valueForKey:@"error"]);
+            }
             // Execute the error block
             dispatch_async(dispatch_get_main_queue(), ^{
                 errorHandler(error);
