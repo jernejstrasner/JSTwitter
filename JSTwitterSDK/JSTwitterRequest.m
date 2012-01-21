@@ -8,6 +8,7 @@
 
 #import "JSTwitterRequest.h"
 #import "JSTwitter.h"
+#import "NSDictionary+HTTP.h"
 
 @implementation JSTwitterRequest
 
@@ -28,7 +29,7 @@
     _endpoint = endpoint;
     [oldVal release];
     // Set the request URL
-    [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingFormat:@"%@.json", endpoint]]];
+    [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingString:endpoint]]];
 }
 
 @synthesize requestType = _requestType;
@@ -101,6 +102,59 @@
 + (JSTwitterRequest *)requestWithRestEndpoint:(NSString *)endpoint requestType:(JSTwitterRequestType)requestType
 {
     return [[[JSTwitterRequest alloc] initWithRestEndpoint:endpoint requestType:requestType] autorelease];
+}
+
+#pragma mark - Request preparation
+
+- (void)prepare
+{
+    [super prepare];
+    
+    if (self.requestType == JSTwitterRequestTypePOST) {
+        // POST
+        NSString *currentURL = [[self URL] absoluteString];
+        
+        BOOL hasExt = ([currentURL rangeOfString:@".json"].location != NSNotFound);
+        NSUInteger queryStart = [currentURL rangeOfString:@"?"].location;
+        BOOL hasParams = (queryStart != NSNotFound);
+        
+        if (!hasExt) {
+            if (hasParams) {
+                currentURL = [[currentURL substringToIndex:queryStart] stringByAppendingFormat:@".json%@", [currentURL substringFromIndex:queryStart]];
+            } else {
+                currentURL = [currentURL stringByAppendingString:@".json"];
+            }
+            [self setURL:[NSURL URLWithString:currentURL]];
+        }        
+
+        NSData *postData = [self.twitterParameters generatePOSTBodyWithBoundary:kJSTwitterStringBoundary];
+        [self setHTTPBody:postData];
+        [self setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+        [self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    } else {
+        // GET
+        NSMutableString *currentURL = [NSMutableString stringWithString:[[self URL] absoluteString]];
+        NSString *queryString = [self.twitterParameters generateGETParameters];
+        
+        BOOL hasExt = ([currentURL rangeOfString:@".json"].location != NSNotFound);
+        NSUInteger queryStart = [currentURL rangeOfString:@"?"].location;
+        BOOL hasParams = (queryStart != NSNotFound);
+        
+        if (!hasExt) {
+            if (hasParams) {
+                [currentURL insertString:@".json" atIndex:queryStart];
+            } else {
+                [currentURL appendString:@".json"];
+            }
+        }
+        
+        if (queryString.length > 0) {
+            [currentURL appendString:(hasParams ? @"&" : @"?")];
+            [currentURL appendString:queryString];
+        }
+        
+        [self setURL:[NSURL URLWithString:currentURL]];
+    }
 }
 
 @end
