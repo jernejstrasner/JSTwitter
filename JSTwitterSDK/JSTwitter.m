@@ -158,6 +158,13 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
     }
 }
 
+- (void)clearSession
+{
+    self.oauthToken = nil;
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kJSTwitterAccessTokenDefaultsKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 #pragma mark - OAuth methods
 
 - (void)getRequestTokenWithCompletionHandler:(jstwitter_request_token_success_block_t)completionHandler

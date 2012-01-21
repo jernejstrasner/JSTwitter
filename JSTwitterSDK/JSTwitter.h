@@ -55,11 +55,20 @@ typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString
  
  Authentication
  
+ */
+
+
+/** 
  This is the method you should use for authentication. It opens a modal window in the
  app's root view controller with a web view. It does all the required oauth token exchanges for you.
  */
 - (void)authenticateWithCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
                              errorHandler:(jstwitter_auth_error_block_t)errorHandler;
+
+/**
+ Use this to clear the current session and the stored token.
+ */
+- (void)clearSession;
 
 
 /**
