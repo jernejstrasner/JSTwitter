@@ -41,9 +41,10 @@
 
 - (id)initFromStorageWithKey:(NSString *)key
 {
+    self = nil;
     NSData *data = [[NSUserDefaults standardUserDefaults] valueForKey:key];
     if (data) {
-        self = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        self = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
         if (self == nil) {
             JSTWLog(@"Could not find token with key %@", key);
         }

@@ -162,6 +162,8 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 {
     self.oauthToken = nil;
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kJSTwitterAccessTokenDefaultsKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.jstwitter.user.name"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.jstwitter.user.id"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
