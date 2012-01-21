@@ -170,6 +170,21 @@
     for (NSString *k in [self oauthParameters]) {
         [signatureParameters addObject:[NSString stringWithFormat:@"%@=%@", k, [[[self oauthParameters] valueForKey:k] URLEncodedString]]];
     }
+    
+    // Check other request parameters
+    if ([[self HTTPMethod] isEqualToString:@"POST"]) {
+        NSString *postString = [[[NSString alloc] initWithData:[self HTTPBody] encoding:NSUTF8StringEncoding] autorelease];
+        [signatureParameters addObjectsFromArray:[postString componentsSeparatedByString:@"&"]];
+    }
+    
+    NSString *urlString = [[self URL] absoluteString];
+    NSUInteger queryStart = [urlString rangeOfString:@"?"].location;
+    if (queryStart != NSNotFound) {
+        NSString *getString = [urlString substringFromIndex:queryStart+1];
+        if ([getString length] > 0) {
+            [signatureParameters addObjectsFromArray:[getString componentsSeparatedByString:@"&"]];
+        }
+    }
         
     [signatureParameters sortUsingSelector:@selector(compare:)];
     
