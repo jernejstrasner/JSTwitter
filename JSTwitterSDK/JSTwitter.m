@@ -187,7 +187,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 		[request setHTTPMethod:@"POST"];
 		// Set the request time out interval in seconds
 		[request setTimeoutInterval:REQUEST_TIMEOUT];
-		// Custom OAuthConsumer method to prepare the request
+		// Prepare the request
 		[request prepare];
 		
 		// Make the request
@@ -254,7 +254,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 		[request setHTTPMethod:@"POST"];
 		// Set the request time out interval in seconds
 		[request setTimeoutInterval:REQUEST_TIMEOUT];
-		// Custom OAuthConsumer method to prepare the request
+		// Prepare the request
 		[request prepare];
 		
 		// Make the request
@@ -297,7 +297,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 
 #pragma mark - Requests
 
-- (void)fetchRequest:(JSTwitterRequest *)_request
+- (void)fetchRequest:(JSTwitterRequest *)request
            onSuccess:(jstwitter_success_data_block_t)completionHandler
              onError:(jstwitter_error_block_t)errorHandler
 {
@@ -313,21 +313,14 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
         
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
-        // Initialize the request
-        JSOAuthRequest *request = [[[JSOAuthRequest alloc] initWithURL:_request.URL consumer:[self oauthConsumer] token:[self oauthToken]] autorelease];
-        [request setHTTPMethod:_request.HTTPMethod];
-//        // POST
-//        NSData *postData = [encodedParameterPairs dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-//        [self setHTTPBody:postData];
-//        [self setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
-//        [self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
+        // Set the consumer and token
+        [request setConsumer:self.oauthConsumer];
+        [request setToken:self.oauthToken];
         // Set the request time out interval in seconds
         [request setTimeoutInterval:REQUEST_TIMEOUT];
-        
-        // Custom OAuthConsumer method to prepare the request
+        // Prepare the request
         [request prepare];
-        
+        JSTWLog(@"%@", [request URL]);
         NSHTTPURLResponse *response = nil;
         NSError *error = nil;
         // We should probably be parsing the data returned by this call, for now just check the error.

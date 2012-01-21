@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import "JSOAuthRequest.h"
+
 typedef enum {
     JSTwitterRequestTypeGET,
     JSTwitterRequestTypePOST
 } JSTwitterRequestType;
 
-@interface JSTwitterRequest : NSMutableURLRequest
+@interface JSTwitterRequest : JSOAuthRequest
 
 @property (nonatomic, retain) NSString *endpoint;
 @property (nonatomic, assign) JSTwitterRequestType requestType;
