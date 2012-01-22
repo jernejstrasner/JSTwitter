@@ -174,7 +174,9 @@
     // Check other request parameters
     if ([[self HTTPMethod] isEqualToString:@"POST"]) {
         NSString *postString = [[[NSString alloc] initWithData:[self HTTPBody] encoding:NSUTF8StringEncoding] autorelease];
-        [signatureParameters addObjectsFromArray:[postString componentsSeparatedByString:@"&"]];
+        if ([postString length] > 0) {
+            [signatureParameters addObjectsFromArray:[postString componentsSeparatedByString:@"&"]];
+        }
     }
     
     NSString *urlString = [[self URL] absoluteString];
