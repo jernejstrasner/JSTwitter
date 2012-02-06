@@ -65,7 +65,11 @@ typedef void(^jstwitter_request_token_success_block_t)(NSString *token, NSString
 - (void)authenticateWithCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
                              errorHandler:(jstwitter_auth_error_block_t)errorHandler;
 
-- (void)authenticateFromViewController:(UIViewController *)viewController withCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
+/**
+ Use this if you want to specify the view controller
+ */
+- (void)authenticateFromViewController:(UIViewController *)viewController
+				 withCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
 						  errorHandler:(jstwitter_auth_error_block_t)errorHandler;
 
 /**
