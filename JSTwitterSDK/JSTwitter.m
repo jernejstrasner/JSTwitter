@@ -22,7 +22,7 @@
 #endif
 
 // Constants
-NSString * const kJSTwitterRestServerURL            = @"https://api.twitter.com/1/";
+NSString * const kJSTwitterRestServerURL            = @"http://api.twitter.com/1/";
 NSString * const kJSTwitterOauthServerURL           = @"https://api.twitter.com/oauth/";
 NSString * const kJSTwitterSearchServerURL          = @"http://search.twitter.com/";
 NSString * const kJSTwitterOauthCallbackURL         = @"jstwitter://successful/";
@@ -147,13 +147,20 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
 - (void)authenticateWithCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
                              errorHandler:(jstwitter_auth_error_block_t)errorHandler
 {
+	UIViewController *viewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+	[self authenticateFromViewController:viewController withCompletionHandler:completionHandler errorHandler:errorHandler];
+}
+
+- (void)authenticateFromViewController:(UIViewController *)viewController withCompletionHandler:(jstwitter_auth_success_block_t)completionHandler
+                             errorHandler:(jstwitter_auth_error_block_t)errorHandler
+{
     if (self.oauthToken) {
         completionHandler();
     } else {
         JSTwitterAuthController *authController = [JSTwitterAuthController authControllerWithConsumerKey:self.oauthConsumerKey consumerSecret:self.oauthConsumerSecret];
         authController.completionHandler = completionHandler;
         authController.errorHandler = errorHandler;
-        UIViewController *viewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+
         [viewController presentModalViewController:authController animated:YES];
     }
 }
