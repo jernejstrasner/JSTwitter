@@ -22,7 +22,7 @@
 #endif
 
 // Constants
-NSString * const kJSTwitterRestServerURL            = @"http://api.twitter.com/1/";
+NSString * const kJSTwitterRestServerURL            = @"https://api.twitter.com/1/";
 NSString * const kJSTwitterOauthServerURL           = @"https://api.twitter.com/oauth/";
 NSString * const kJSTwitterSearchServerURL          = @"http://search.twitter.com/";
 NSString * const kJSTwitterOauthCallbackURL         = @"jstwitter://successful/";
