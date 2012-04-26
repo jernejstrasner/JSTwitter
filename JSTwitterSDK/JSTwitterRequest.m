@@ -125,7 +125,17 @@
             [self setURL:[NSURL URLWithString:currentURL]];
         }        
 
-        NSData *postData = [self.twitterParameters generatePOSTBodyWithBoundary:nil];
+		NSData *postData;
+		NSArray *dataParams = [[[self twitterParameters] allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+			return [evaluatedObject isKindOfClass:[UIImage class]] || [evaluatedObject isKindOfClass:[NSData class]];
+		}]];
+		if (dataParams.count > 0) {
+			postData = [self.twitterParameters generatePOSTBodyWithBoundary:kJSTwitterStringBoundary];
+		}
+		else {
+			postData = [self.twitterParameters generatePOSTBodyWithBoundary:nil];
+		}
+        
         [self setHTTPBody:postData];
         [self setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
         [self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
