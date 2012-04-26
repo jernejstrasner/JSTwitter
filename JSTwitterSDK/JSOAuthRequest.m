@@ -143,8 +143,21 @@
 
     // Add all oauth parameters
     NSMutableArray *joinedParameters = [NSMutableArray array];
+	id val;
     for (NSString *k in [self oauthParameters]) {
-        [joinedParameters addObject:[NSString stringWithFormat:@"%@=\"%@\"", k, [[[self oauthParameters] valueForKey:k] URLEncodedString]]];
+		val = [[self oauthParameters] valueForKey:k];
+		if ([val isKindOfClass:[NSString class]] == NO) {
+			if ([val isKindOfClass:[UIImage class]]) {
+				val = [[[NSString alloc] initWithData:UIImageJPEGRepresentation(val, 0.8f) encoding:NSASCIIStringEncoding] autorelease];
+			}
+			else if ([val isKindOfClass:[NSData class]]) {
+				val = [[[NSString alloc] initWithData:val encoding:NSASCIIStringEncoding] autorelease];
+			}
+			else {
+				[NSException raise:@"Parameter processing exception" format:@"Parameters must be instances of NSString, UIImage or NSData!"];
+			}
+		}
+        [joinedParameters addObject:[NSString stringWithFormat:@"%@=\"%@\"", k, [val URLEncodedString]]];
     }
     [joinedParameters sortUsingSelector:@selector(compare:)];
     [oauthHeader appendString:[joinedParameters componentsJoinedByString:@", "]];
@@ -167,8 +180,21 @@
 {
     NSMutableArray *signatureParameters = [NSMutableArray array];
     
+	id val;
     for (NSString *k in [self oauthParameters]) {
-        [signatureParameters addObject:[NSString stringWithFormat:@"%@=%@", k, [[[self oauthParameters] valueForKey:k] URLEncodedString]]];
+		val = [[self oauthParameters] valueForKey:k];
+		if ([val isKindOfClass:[NSString class]] == NO) {
+			if ([val isKindOfClass:[UIImage class]]) {
+				val = [[[NSString alloc] initWithData:UIImageJPEGRepresentation(val, 0.8f) encoding:NSASCIIStringEncoding] autorelease];
+			}
+			else if ([val isKindOfClass:[NSData class]]) {
+				val = [[[NSString alloc] initWithData:val encoding:NSASCIIStringEncoding] autorelease];
+			}
+			else {
+				[NSException raise:@"Parameter processing exception" format:@"Parameters must be instances of NSString, UIImage or NSData!"];
+			}
+		}
+        [signatureParameters addObject:[NSString stringWithFormat:@"%@=%@", k, [val URLEncodedString]]];
     }
     
     // Check other request parameters
