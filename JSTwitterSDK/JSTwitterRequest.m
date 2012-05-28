@@ -29,7 +29,13 @@
     _endpoint = endpoint;
     [oldVal release];
     // Set the request URL
-    [self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingString:endpoint]]];
+	// Check if we have to use upload.twitter.com
+	if ([endpoint rangeOfString:@"update_with_media"].location != NSNotFound) {
+		[self setURL:[NSURL URLWithString:[kJSTwitterUploadServerURL stringByAppendingString:endpoint]]];
+	}
+	else {
+		[self setURL:[NSURL URLWithString:[kJSTwitterRestServerURL stringByAppendingString:endpoint]]];
+	}
 }
 
 @synthesize requestType = _requestType;
