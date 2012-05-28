@@ -25,6 +25,7 @@
 NSString * const kJSTwitterRestServerURL            = @"https://api.twitter.com/1/";
 NSString * const kJSTwitterOauthServerURL           = @"https://api.twitter.com/oauth/";
 NSString * const kJSTwitterSearchServerURL          = @"http://search.twitter.com/";
+NSString * const kJSTwitterUploadServerURL          = @"https://upload.twitter.com/1/";
 NSString * const kJSTwitterOauthCallbackURL         = @"jstwitter://successful/";
 NSString * const kJSTwitterStringBoundary           = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 NSString * const kJSTwitterAccessTokenDefaultsKey   = @"com.jstwitter.token";

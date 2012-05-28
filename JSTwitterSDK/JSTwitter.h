@@ -20,6 +20,7 @@
 extern NSString * const kJSTwitterRestServerURL;
 extern NSString * const kJSTwitterOauthServerURL;
 extern NSString * const kJSTwitterSearchServerURL;
+extern NSString * const kJSTwitterUploadServerURL;
 extern NSString * const kJSTwitterOauthCallbackURL;
 extern NSString * const kJSTwitterStringBoundary;
 extern NSString * const kJSTwitterAccessTokenDefaultsKey;
