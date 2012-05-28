@@ -11,7 +11,8 @@
 
 @implementation NSDictionary (JSTwitterHTTP)
 
-- (NSString *)generateGETParameters {
+- (NSString *)generateGETParameters
+{
 	NSMutableArray *pairs = [NSMutableArray new];
 	for (NSString *key in self) {
 		// Get the object
@@ -37,39 +38,39 @@
 	return parameters;
 }
 
-- (NSData *)generatePOSTBodyWithBoundary:(NSString *)boundary {
-    if (boundary == nil) {
-        return [[self generateGETParameters] dataUsingEncoding:NSUTF8StringEncoding];
-    }
-	NSMutableData *body = [NSMutableData data];
-	NSString *beginLine = [NSString stringWithFormat:@"\r\n--%@\r\n", boundary];
-	
-	[body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-	
+- (NSData *)generateMultipartPostBodyWithBoundary:(NSString *)boundary
+{
+	NSMutableData *body = [[NSMutableData alloc] init];
+
+	// Iterate trough the dictonary entries
+	id value;
 	for (id key in self) {
-		id value = [self valueForKey:key];
+		value = [self valueForKey:key];
+		
+		[body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+
 		if ([value isKindOfClass:[UIImage class]]) {
-			UIImage *image = [self objectForKey:key];
-			NSData *data = UIImageJPEGRepresentation(image, 0.8);
-			[body appendData:[beginLine dataUsingEncoding:NSUTF8StringEncoding]];
-			[body appendData:[[NSString stringWithFormat:@"Content-Disposition: multipart/form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
-			[body appendData:[[NSString stringWithFormat:@"Content-Length: %d\r\n", [data length]] dataUsingEncoding:NSUTF8StringEncoding]];
+			NSData *imageData = UIImageJPEGRepresentation(value, 0.8);
+			[body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
+			[body appendData:[[NSString stringWithFormat:@"Content-Length: %d\r\n", [imageData length]] dataUsingEncoding:NSUTF8StringEncoding]];
 			[body appendData:[[NSString stringWithString:@"Content-Type: image/jpeg\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-			[body appendData:data];
-		} else if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
-			[body appendData:[beginLine dataUsingEncoding:NSUTF8StringEncoding]];        
-			[body appendData:[[NSString stringWithFormat:@"Content-Disposition: multipart/form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
+			[body appendData:[NSData dataWithData:imageData]];
+		}
+		else if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
+			[body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
 			[body appendData:[value JSONData]];
-		} else {
-			[body appendData:[beginLine dataUsingEncoding:NSUTF8StringEncoding]];        
-			[body appendData:[[NSString stringWithFormat:@"Content-Disposition: multipart/form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
+		}
+		else {
+			[body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
 			[body appendData:[value dataUsingEncoding:NSUTF8StringEncoding]];
 		}
+		
+		[body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
 	}
 
 	[body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
 	
-	return body;
+	return [body autorelease];
 }
 
 @end

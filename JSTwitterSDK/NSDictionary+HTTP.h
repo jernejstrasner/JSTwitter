@@ -9,11 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-
 @interface NSDictionary (JSTwitterHTTP)
 
 // Network data encoding methods
 - (NSString *)generateGETParameters;
-- (NSData *)generatePOSTBodyWithBoundary:(NSString *)boundary;
+- (NSData *)generateMultipartPostBodyWithBoundary:(NSString *)boundary;
 
 @end

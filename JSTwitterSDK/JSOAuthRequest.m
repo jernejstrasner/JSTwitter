@@ -193,7 +193,7 @@
     }
         
     [signatureParameters sortUsingSelector:@selector(compare:)];
-    
+	
     NSString *ret = [NSString stringWithFormat:@"%@&%@&%@",
 					 [self HTTPMethod],
 					 [[[self URL] URLStringWithoutQuery] URLEncodedString],

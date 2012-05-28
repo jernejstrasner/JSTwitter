@@ -136,15 +136,16 @@
 			return [evaluatedObject isKindOfClass:[UIImage class]] || [evaluatedObject isKindOfClass:[NSData class]];
 		}]];
 		if (dataParams.count > 0) {
-			postData = [self.twitterParameters generatePOSTBodyWithBoundary:kJSTwitterStringBoundary];
+			postData = [self.twitterParameters generateMultipartPostBodyWithBoundary:kJSTwitterStringBoundary];
+			[self setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", kJSTwitterStringBoundary] forHTTPHeaderField:@"Content-Type"];
 		}
 		else {
-			postData = [self.twitterParameters generatePOSTBodyWithBoundary:nil];
+			postData = [[self.twitterParameters generateGETParameters] dataUsingEncoding:NSUTF8StringEncoding];
+			[self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
 		}
-        
+		
         [self setHTTPBody:postData];
         [self setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
-        [self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     } else {
         // GET
         NSMutableString *currentURL = [NSMutableString stringWithString:[[self URL] absoluteString]];
