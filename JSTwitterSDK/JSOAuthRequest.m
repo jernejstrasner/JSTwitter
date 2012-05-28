@@ -146,17 +146,6 @@
 	id val;
     for (NSString *k in [self oauthParameters]) {
 		val = [[self oauthParameters] valueForKey:k];
-		if ([val isKindOfClass:[NSString class]] == NO) {
-			if ([val isKindOfClass:[UIImage class]]) {
-				val = [[[NSString alloc] initWithData:UIImageJPEGRepresentation(val, 0.8f) encoding:NSASCIIStringEncoding] autorelease];
-			}
-			else if ([val isKindOfClass:[NSData class]]) {
-				val = [[[NSString alloc] initWithData:val encoding:NSASCIIStringEncoding] autorelease];
-			}
-			else {
-				[NSException raise:@"Parameter processing exception" format:@"Parameters must be instances of NSString, UIImage or NSData!"];
-			}
-		}
         [joinedParameters addObject:[NSString stringWithFormat:@"%@=\"%@\"", k, [val URLEncodedString]]];
     }
     [joinedParameters sortUsingSelector:@selector(compare:)];
@@ -183,24 +172,13 @@
 	id val;
     for (NSString *k in [self oauthParameters]) {
 		val = [[self oauthParameters] valueForKey:k];
-		if ([val isKindOfClass:[NSString class]] == NO) {
-			if ([val isKindOfClass:[UIImage class]]) {
-				val = [[[NSString alloc] initWithData:UIImageJPEGRepresentation(val, 0.8f) encoding:NSASCIIStringEncoding] autorelease];
-			}
-			else if ([val isKindOfClass:[NSData class]]) {
-				val = [[[NSString alloc] initWithData:val encoding:NSASCIIStringEncoding] autorelease];
-			}
-			else {
-				[NSException raise:@"Parameter processing exception" format:@"Parameters must be instances of NSString, UIImage or NSData!"];
-			}
-		}
         [signatureParameters addObject:[NSString stringWithFormat:@"%@=%@", k, [val URLEncodedString]]];
     }
     
     // Check other request parameters
     if ([[self HTTPMethod] isEqualToString:@"POST"]) {
         NSString *postString = [[[NSString alloc] initWithData:[self HTTPBody] encoding:NSUTF8StringEncoding] autorelease];
-        if ([postString length] > 0) {
+        if ([postString length] > 0 && [postString rangeOfString:@"multipart/form-data"].location == NSNotFound) {
             [signatureParameters addObjectsFromArray:[postString componentsSeparatedByString:@"&"]];
         }
     }
