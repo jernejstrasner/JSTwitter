@@ -19,6 +19,7 @@
 		B81E84AA14C83BA800E2ACA5 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = B81E84A814C83BA800E2ACA5 /* Base64Transcoder.c */; };
 		B81E84AD14C84D2500E2ACA5 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E84AC14C84D2500E2ACA5 /* NSString+URLEncoding.m */; };
 		B81E84B014C859FC00E2ACA5 /* NSURL+Base.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E84AF14C859FB00E2ACA5 /* NSURL+Base.m */; };
+		B81EFFC1154F69F0003851AA /* IMG_0050.JPG in Resources */ = {isa = PBXBuildFile; fileRef = B81EFFC0154F69F0003851AA /* IMG_0050.JPG */; };
 		B8C2401614C5AA79002AD18F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C2401514C5AA79002AD18F /* UIKit.framework */; };
 		B8C2401814C5AA79002AD18F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C2401714C5AA79002AD18F /* Foundation.framework */; };
 		B8C2401A14C5AA79002AD18F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8C2401914C5AA79002AD18F /* CoreGraphics.framework */; };
@@ -55,6 +56,7 @@
 		B81E84AC14C84D2500E2ACA5 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
 		B81E84AE14C859FB00E2ACA5 /* NSURL+Base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+Base.h"; sourceTree = "<group>"; };
 		B81E84AF14C859FB00E2ACA5 /* NSURL+Base.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Base.m"; sourceTree = "<group>"; };
+		B81EFFC0154F69F0003851AA /* IMG_0050.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0050.JPG; sourceTree = "<group>"; };
 		B8C2401114C5AA79002AD18F /* JSTwitter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSTwitter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8C2401514C5AA79002AD18F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B8C2401714C5AA79002AD18F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -163,6 +165,7 @@
 		B8C2401B14C5AA79002AD18F /* JSTwitter */ = {
 			isa = PBXGroup;
 			children = (
+				B81EFFC0154F69F0003851AA /* IMG_0050.JPG */,
 				B8C2402414C5AA79002AD18F /* JSAppDelegate.h */,
 				B8C2402514C5AA79002AD18F /* JSAppDelegate.m */,
 				B8C2402714C5AA79002AD18F /* JSViewController.h */,
@@ -239,6 +242,7 @@
 				B8C2402014C5AA79002AD18F /* InfoPlist.strings in Resources */,
 				B8C2402C14C5AA79002AD18F /* JSViewController_iPhone.xib in Resources */,
 				B8C2402F14C5AA79002AD18F /* JSViewController_iPad.xib in Resources */,
+				B81EFFC1154F69F0003851AA /* IMG_0050.JPG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

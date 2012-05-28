@@ -43,13 +43,24 @@
     
     [[JSTwitter sharedInstance] authenticateWithCompletionHandler:^{
         NSLog(@"Authenticated: [%@]%@", [[JSTwitter sharedInstance] userID], [[JSTwitter sharedInstance] username]);
-        NSLog(@"Gettind test data...");
-        JSTwitterRequest *request = [JSTwitterRequest requestWithRestEndpoint:@"/statuses/home_timeline"];
-        [[JSTwitter sharedInstance] fetchRequest:request onSuccess:^(id obj) {
-            NSLog(@"Got mentions: %@", obj);
-        } onError:^(NSError *error) {
-            NSLog(@"Error fetching mentions: %@", [error localizedDescription]);
-        }];
+        NSLog(@"Getting test data...");
+//        JSTwitterRequest *request = [JSTwitterRequest requestWithRestEndpoint:@"/statuses/home_timeline"];
+//        [[JSTwitter sharedInstance] fetchRequest:request onSuccess:^(id obj) {
+//            NSLog(@"Got mentions: %@", obj);
+//			
+//			
+//        } onError:^(NSError *error) {
+//            NSLog(@"Error fetching mentions: %@", [error localizedDescription]);
+//        }];
+		JSTwitterRequest *req = [JSTwitterRequest requestWithRestEndpoint:@"/statuses/update_with_media" requestType:JSTwitterRequestTypePOST];
+		[req addParameter:@"Testing JSTwitter" withKey:@"status"];
+		[req addParameter:[UIImage imageNamed:@"IMG_0050.JPG"] withKey:@"media"];
+		[[JSTwitter sharedInstance] fetchRequest:req onSuccess:^(id obj) {
+			NSLog(@"Successfully posted!");
+		} onError:^(NSError *error) {
+			NSLog(@"ERROR: %@", error);
+		}];
+
     } errorHandler:^(NSError *error) {
         NSLog(@"Authentication error!");
         [[JSTwitter sharedInstance] clearSession];
