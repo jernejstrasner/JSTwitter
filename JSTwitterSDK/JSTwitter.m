@@ -222,7 +222,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
                 NSArray *temp;
                 for (NSString *parameter in parameters) {
                     temp = [parameter componentsSeparatedByString:@"="];
-                    [requestTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
+                    requestTokenData[temp[0]] = temp[1];
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // Request the display of a dialog
@@ -232,7 +232,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
                 JSTWLog(@"Could not parse the received data!");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // Request the display of a dialog
-                    errorHandler([NSError errorWithDomain:kJSTwitterOtherErrorDomain code:1 userInfo:[NSDictionary dictionaryWithObject:@"Could not parse received data!" forKey:NSLocalizedDescriptionKey]]);
+                    errorHandler([NSError errorWithDomain:kJSTwitterOtherErrorDomain code:1 userInfo:@{NSLocalizedDescriptionKey: @"Could not parse received data!"}]);
                 });
             }
             
@@ -288,7 +288,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
             NSArray *temp;
             for (NSString *parameter in parameters) {
                 temp = [parameter componentsSeparatedByString:@"="];
-                [accessTokenData setObject:[temp objectAtIndex:1] forKey:[temp objectAtIndex:0]];
+                accessTokenData[temp[0]] = temp[1];
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -393,7 +393,7 @@ NSString * const kJSTwitterOtherErrorDomain         = @"com.jstwitter.error.othe
             errorDescription = [NSHTTPURLResponse localizedStringForStatusCode:code];
             break;
     }
-    return [NSError errorWithDomain:kJSTwitterNetworkErrorDomain code:code userInfo:[NSDictionary dictionaryWithObject:errorDescription forKey:NSLocalizedDescriptionKey]];
+    return [NSError errorWithDomain:kJSTwitterNetworkErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
 }
 
 @end
